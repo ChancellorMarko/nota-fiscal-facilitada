@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 
 class DatabaseMock:
-    def __init__(self, db_name="nfse_mock.db"):
+    def __init__(self, db_name: str ="nfse_mock.db"):
         self.db_name = db_name
         self._criar_tabela()
 
@@ -31,7 +31,7 @@ class DatabaseMock:
         finally:
             conn.close()
 
-    def inserir_nota(self, numero, tomador, valor, servico):
+    def inserir_nota(self, numero: int, tomador: str, valor: float, servico: str):
         with self._get_connection() as conn:
             cursor = conn.execute(
                 """

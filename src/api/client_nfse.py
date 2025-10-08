@@ -2,10 +2,10 @@ import requests
 
 
 class ClienteNFSe:
-    def __init__(self, base_url="http://localhost:8000"):
+    def __init__(self, base_url: str ="http://localhost:8000"):
         self.base_url = base_url
 
-    def emitir_nota(self, tomador, valor, servico):
+    def emitir_nota(self, tomador: str, valor: float, servico: str):
         response = requests.post(
             f"{self.base_url}/notas-fiscais",
             params={"tomador": tomador, "valor": valor, "servico": servico},
