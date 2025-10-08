@@ -1,0 +1,19 @@
+[project]
+name = "nota-fiscal-facilitada"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Marcos",email = "45522449+ChancellorMarko@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [{include = "nota_fiscal_facilitada", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
