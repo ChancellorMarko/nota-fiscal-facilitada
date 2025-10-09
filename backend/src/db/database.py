@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class Database:

@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from db.db import Database
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models.models import NotaFiscalCreate
+
+from .db.database import Database
+from .models.nfse_model import NotaFiscalCreate
 
 app = FastAPI(
     title="NFSe API",
