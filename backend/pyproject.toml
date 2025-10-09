@@ -1,22 +1,25 @@
 [project]
-name = "nota-fiscal-facilitada"
+name = "nfde-backend"
 version = "0.1.0"
-description = ""
+description = "Backend para sistema de NFSe."
 authors = [
     {name = "Marcos",email = "45522449+ChancellorMarko@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi (>=0.118.2,<0.119.0)",
     "uvicorn (>=0.37.0,<0.38.0)",
-    "requests (>=2.32.5,<3.0.0)"
+    "pydantic (>=2.12.0,<3.0.0)",
+    "python-multipart (>=0.0.20,<0.0.21)"
 ]
-
-[tool.poetry]
-packages = [{include = "nota_fiscal_facilitada", from = "src"}]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.2"
+black = "^25.9.0"
+
