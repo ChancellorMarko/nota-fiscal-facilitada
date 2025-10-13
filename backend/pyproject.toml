@@ -1,12 +1,13 @@
 [project]
-name = "nfde-backend"
+name = "nfse-backend"
 version = "0.1.0"
 description = "Backend para sistema de NFSe."
 authors = [
     {name = "Marcos",email = "45522449+ChancellorMarko@users.noreply.github.com"}
 ]
-readme = "README.md"
-requires-python = ">=3.12"
+readme = "../README.md"
+package-mode = false
+requires-python = ">=3.13,<4.0"
 dependencies = [
     "fastapi[standard] (>=0.116.1,<0.117.0)",
     "bcrypt (>=4.3.0,<5.0.0)",
@@ -55,12 +56,11 @@ asyncio_default_fixture_loop_scope = 'function'
 lint = 'ruff check'
 pre_format = 'ruff check --fix'
 format = 'ruff format'
-run = 'fastapi dev espumosa/app.py'
+run = 'fastapi dev src/app.py'
 pre_test = 'task lint'
-test = 'pytest -s -x --cov=espumosa -vv'
+test = 'pytest -s -x --cov=src -vv'
 post_test = 'coverage html'
 new_migration = 'alembic revision --autogenerate -m'
 
 [tool.coverage.run]
 concurrency = ["thread", "greenlet"]
-

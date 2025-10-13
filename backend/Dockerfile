@@ -21,7 +21,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-COPY espumosa ./espumosa
+COPY src ./src
 COPY migrations ./migrations
 COPY alembic.ini ./alembic.ini
 COPY entrypoint.sh ./entrypoint.sh
