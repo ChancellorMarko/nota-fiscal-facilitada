@@ -21,7 +21,6 @@ Projeto feito com FastAPI, SQLAlchemy, asyncio e Alembic. Este projeto tem como 
 - **Poetry**: Ferramenta de gerenciamento de dependências e empacotamento para Python.
 - **Docker & Docker Compose**: Para conteinerização e orquestração do ambiente de desenvolvimento e produção.
 - **Ruff**: Linter e formatador de código Python.
-- **Pytest**: Framework de testes para Python.
 - **Taskipy**: Para automação de tarefas via `pyproject.toml`.
 
 ## Frontend:
