@@ -45,7 +45,7 @@ class Database:
             """,
                 (numero, tomador, valor, servico),
             )
-            return cursor.lastrowid
+            return cursor.lastrowid # type: ignore
 
     def get_all_notas(self) -> List[Dict[str, Any]]:
         with self._get_connection() as conn:
