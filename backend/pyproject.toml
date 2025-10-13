@@ -8,10 +8,15 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi (>=0.118.2,<0.119.0)",
-    "uvicorn (>=0.37.0,<0.38.0)",
-    "pydantic (>=2.12.0,<3.0.0)",
-    "python-multipart (>=0.0.20,<0.0.21)"
+    "fastapi[standard] (>=0.116.1,<0.117.0)",
+    "bcrypt (>=4.3.0,<5.0.0)",
+    "sqlalchemy[asyncio] (>=2.0.41,<3.0.0)",
+    "pydantic-settings (>=2.10.1,<3.0.0)",
+    "alembic (>=1.16.4,<2.0.0)",
+    "pyjwt (>=2.10.1,<3.0.0)",
+    "tzdata (>=2025.2,<2026.0)",
+    "psycopg[binary] (>=3.2.9,<4.0.0)",
+    "phonenumbers (>=9.0.10,<10.0.0)"
 ]
 
 
@@ -20,6 +25,42 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.2"
-black = "^25.9.0"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+taskipy = "^1.14.1"
+ruff = "^0.12.3"
+pytest-asyncio = "^1.1.0"
+factory-boy = "^3.3.3"
+freezegun = "^1.5.3"
+testcontainers = "^4.12.0"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT', 'FAST']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+asyncio_default_fixture_loop_scope = 'function'
+
+[tool.taskipy.tasks]
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
+run = 'fastapi dev espumosa/app.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=espumosa -vv'
+post_test = 'coverage html'
+new_migration = 'alembic revision --autogenerate -m'
+
+[tool.coverage.run]
+concurrency = ["thread", "greenlet"]
 

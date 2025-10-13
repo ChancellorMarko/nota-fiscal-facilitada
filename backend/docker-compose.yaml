@@ -1,0 +1,30 @@
+services:
+  database:
+    image: postgres:17-alpine
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $DATABASE_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: app
+    build: .
+    entrypoint: ./entrypoint.sh
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
