@@ -1,23 +1,15 @@
-from pydantic import BaseModel
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 
+from src.models.abstract_base import AbstractBaseModel
+from src.models.registry import table_registry
 
-class NotaFiscalBase(BaseModel):
-    tomador: str
-    valor: float
-    servico: str
+@table_registry.mapped_as_dataclass
+class NfseModel(AbstractBaseModel):
+    __tablename__ = "nfse"
 
-class NotaFiscalCreate(NotaFiscalBase):
-    id: int
-    numero: str
-    data_emissao: str
-    situacao: str
-
-class NotaFiscalResponse(NotaFiscalBase):
-    id: int
-    numero: str
-    data_emissao: str
-    situacao: str
-
-    class Config:
-        from_attributes = True
-
+    tomador: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    numero: Mapped[str] = mapped_column(String(100), nullable=False)
+    valor: Mapped[float] = mapped_column(Integer, nullable=False)
+    servico: Mapped[str] = mapped_column(String(100), nullable=False)
+    situacao: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
