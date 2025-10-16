@@ -19,18 +19,14 @@ function Login() {
 
         // Simulação de requisição
         setTimeout(() => {
-            if (email === 'demo@exemplo.com' && password === 'demo123') {
-                alert('Login realizado com sucesso!');
-            } else {
-                setError('Email ou senha incorretos. Tente novamente.');
-            }
+            // Simulação de requisição
+            alert('Login realizado com sucesso!');
             setLoading(false);
         }, 1500);
     };
 
     const handleRegister = () => {
-        alert('Redirecionando para página de registro...');
-        return navigator(ROUTES.LOGIN);
+        return navigator(ROUTES.REGISTER);
     };
 
     return (
