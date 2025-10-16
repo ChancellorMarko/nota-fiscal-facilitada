@@ -1,4 +1,4 @@
-import './notFound.css';
+import './notFoundStyle.css';
 
 function NotFound() {
     return (
