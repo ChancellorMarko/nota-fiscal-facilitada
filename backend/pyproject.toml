@@ -5,7 +5,7 @@ description = "Backend para sistema de NFSe."
 authors = [
     {name = "Marcos",email = "45522449+ChancellorMarko@users.noreply.github.com"}
 ]
-readme = "../README.md"
+readme = "README.md"
 package-mode = false
 requires-python = ">=3.13,<4.0"
 dependencies = [

@@ -59,7 +59,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
     Navegue até o diretório raiz do projeto (`espumosa/`) e execute:
 
     ```bash
-    docker-compose up --build -d
+    docker compose up --build -d
     ```
 
     - `--build`: Reconstrói as imagens Docker (necessário na primeira vez ou após alterações no `Dockerfile`).
@@ -68,7 +68,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
 3.  **Verifique o status dos serviços:**
 
     ```bash
-    docker-compose ps
+    docker compose ps
     ```
 
 4.  **Acesse a API:**
@@ -81,7 +81,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
     Para parar e remover os contêineres, redes e volumes criados pelo Docker Compose:
 
     ```bash
-    docker-compose down -v
+    docker compose down -v
     ```
 
     - `-v`: Remove também os volumes de dados (útil para limpar o banco de dados).
@@ -149,4 +149,37 @@ Para reverter a última migração aplicada:
 
 ---
 
-## Frontend - Interface
+## Frontend - App
+
+### Scripts disponíveis
+
+No diretório do projeto, você pode executar:
+
+### npm start
+
+```bash
+npm start
+```
+
+Executa o aplicativo no modo de desenvolvimento.
+Abra [http://localhost:3000](http://localhost:3000) para visualizá-lo em seu navegador.
+
+A página será recarregada quando você fizer alterações.
+Você também pode ver quaisquer erros de lint no console.
+
+### npm test
+
+```bash
+npm test
+```
+
+Inicia o corredor de teste no modo de relógio interativo.
+
+### npm run build
+
+```bash
+npm run build
+```
+
+Cria o aplicativo para produção na pasta `build'.
+Ele empacota corretamente o React no modo de produção e otimiza a compilação para o melhor desempenho.

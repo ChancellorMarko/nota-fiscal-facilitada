@@ -19,13 +19,14 @@ FROM python:3.13.5-slim AS runtime
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
+WORKDIR /app
+
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 COPY src ./src
 COPY migrations ./migrations
 COPY alembic.ini ./alembic.ini
-COPY entrypoint.sh ./entrypoint.sh
+COPY entrypoint.py ./entrypoint.py
 
-
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+RUN chmod +x entrypoint.py
+ENTRYPOINT ["python", "entrypoint.py"]

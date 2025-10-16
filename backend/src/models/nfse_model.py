@@ -10,6 +10,6 @@ class NfseModel(AbstractBaseModel):
 
     tomador: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     numero: Mapped[str] = mapped_column(String(100), nullable=False)
-    valor: Mapped[float] = mapped_column(Integer, nullable=False)
+    valor: Mapped[float] = mapped_column(String(100), nullable=False)
     servico: Mapped[str] = mapped_column(String(100), nullable=False)
     situacao: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
