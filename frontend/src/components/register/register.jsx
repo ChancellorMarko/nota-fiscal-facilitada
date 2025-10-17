@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../router/routes";
+import api from "../../services/api";
 import './registerStyle.css'
 
 function Register() {
@@ -15,28 +16,48 @@ function Register() {
     // Navigator
     const navigator = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
-
-        if (!confirmPasswordsMatch()) {
-            setError('As senhas não coincidem. Tente novamente.');
-            setLoading(false);
-            return;
-        }
-
-        // Simulação de requisição
-        setTimeout(() => {
-            // Simulação de requisição
-            alert('Registro realizado com sucesso!');
-            setLoading(false);
-        }, 1500);
-    }
-
     function confirmPasswordsMatch() {
         return password === confirmPassword;
     }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Validações básicas
+        if (!name || !email || !phone || !password || !confirmPassword) {
+            setError('Todos os campos são obrigatórios');
+            return;
+        }
+
+        if (!confirmPasswordsMatch()) {
+            setError('As senhas não coincidem. Tente novamente.');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // Faz a requisição de registro
+            const response = await api.register({
+                name,
+                email,
+                phone,
+                password,
+            });
+
+            console.log('Usuário registrado:', response);
+            alert('Registro realizado com sucesso! Faça login para continuar.');
+
+            // Redireciona para o login
+            navigator(ROUTES.LOGIN);
+        } catch (err) {
+            console.error('Erro no registro:', err);
+            setError(err.message || 'Erro ao registrar. Tente novamente.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleLogin = () => {
         return navigator(ROUTES.LOGIN);
