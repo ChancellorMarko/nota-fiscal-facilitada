@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../router/routes'
+import api from '../../services/api';
 import './loginStyle.css';
 
 function Login() {
@@ -12,17 +13,38 @@ function Login() {
     // Navigator
     const navigator = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Validações básicas
+        if (!email || !password) {
+            setError('Email e senha são obrigatórios');
+            return;
+        }
+
         setLoading(true);
 
-        // Simulação de requisição
-        setTimeout(() => {
-            // Simulação de requisição
+        try {
+            // Faz a requisição de login
+            const response = await api.login(email, password);
+
+            console.log('Login realizado:', response);
+
+            // Armazena o token no localStorage
+            localStorage.setItem('access_token', response.access_token);
+            localStorage.setItem('token_type', response.token_type);
+
             alert('Login realizado com sucesso!');
+
+            // Redireciona para a página principal (ajuste a rota conforme necessário)
+            navigator(ROUTES.HOME || '/dashboard');
+        } catch (err) {
+            console.error('Erro no login:', err);
+            setError(err.message || 'Email ou senha incorretos');
+        } finally {
             setLoading(false);
-        }, 1500);
+        }
     };
 
     const handleRegister = () => {
