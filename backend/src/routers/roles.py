@@ -24,7 +24,7 @@ RoleRepo = Annotated[RoleRepository, Depends(get_role_repository)]
 @router.post('/', status_code=HTTPStatus.CREATED, response_model=RoleRead)
 async def create_role(role_in: RoleCreate, repo: RoleRepo):
     if await repo.get_by_name(role_in.name):
-        return HTTPException(
+        raise HTTPException(
             status_code=HTTPStatus.CONFLICT, detail='Name already exists'
         )
 

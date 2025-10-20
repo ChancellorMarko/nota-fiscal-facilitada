@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.database import get_session
 from src.models.user_model import UserModel
-from src.models.nota_fiscal_model import NotaFiscalModel
+from src.models.notaFiscal_model import NotaFiscal
 from src.repositories.nota_fiscal_repository import NotaFiscalRepository
 from src.schemas.nota_fiscal_schema import NotaFiscalCreate, NotaFiscalList, NotaFiscalRead
 from src.security import get_current_user
@@ -25,7 +25,7 @@ async def create_nota_fiscal(
     repo: Repo,
     current_user: CurrentUser,
 ):
-    nota_fiscal = NotaFiscalModel(
+    nota_fiscal = NotaFiscal(
         **nota_fiscal_in.model_dump(),
         user_id=current_user.id # Associa a nota ao usuário logado
     )
