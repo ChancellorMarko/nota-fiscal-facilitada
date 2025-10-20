@@ -1,41 +1,29 @@
-from datetime import datetime
-from decimal import Decimal
-from sqlalchemy import String, Numeric, Text
+from sqlalchemy import String, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
+from src.models.abstract_base import AbstractBaseModel
 from src.models.registry import table_registry
-from src.models.abstract_base import AbstractBaseModel  
 
 @table_registry.mapped_as_dataclass
-class NotaFiscal(AbstractBaseModel):
-    """
-    Modelo que representa uma Nota Fiscal no sistema.
+class NotaFiscalModel(AbstractBaseModel):
+    __tablename__ = "notas_fiscais"
 
-    Herda de AbstractBaseModel, que já fornece:
-    - id (chave primária)
-    - created_at (data de criação)
-    - updated_at (data de atualização)
-    """
+    # --- Relacionamento com o Usuário que emitiu ---
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    __tablename__ = "nota_fiscal"
+    # --- Dados do Tomador (Cliente) ---
+    tomador_documento: Mapped[str] = mapped_column(String(14), index=True)
+    tomador_nome: Mapped[str] = mapped_column(String(100))
+    tomador_email: Mapped[str | None] = mapped_column(String(100))
 
-    # Identificação da Nota Fiscal
-    numero_nota: Mapped[str] = mapped_column(String(50), nullable=False)
-    serie: Mapped[str] = mapped_column(String(20), nullable=False)
-    cfop: Mapped[str] = mapped_column(String(10), nullable=False)
+    # --- Dados do Serviço Prestado ---
+    discriminacao: Mapped[str] = mapped_column(Text) # Descrição do serviço
+    codigo_servico: Mapped[str | None] = mapped_column(String(20))
 
-    # Dados do Emitente
-    nome_emitente: Mapped[str] = mapped_column(String(100), nullable=False)
-    cnpj_emitente: Mapped[str] = mapped_column(String(18), nullable=False)
+    # --- Valores ---
+    valor_servicos: Mapped[float] = mapped_column(Numeric(10, 2))
+    aliquota_iss: Mapped[float] = mapped_column(Numeric(5, 2))
 
-    # Dados do Destinatário
-    nome_destinatario: Mapped[str] = mapped_column(String(100), nullable=False)
-    cpf_ou_cnpj_destinatario: Mapped[str] = mapped_column(String(18), nullable=False)
-
-    # Valores e Impostos
-    valor_total: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
-    icms: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-    pis: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-    cofins: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-    desconto: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-
+    # --- Controle Interno ---
+    situacao: Mapped[str] = mapped_column(String(30), default="Rascunho", index=True)
+    numero_nfse: Mapped[str | None] = mapped_column(String(50), unique=True)

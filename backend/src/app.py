@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.routers import auth, users
+# 1. Importe o novo router junto com os outros
+from src.routers import auth, users, nota_fiscal_router
 
 app = FastAPI()
 
-# Configuração CORS
+# Configuração CORS (continua igual)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -19,5 +20,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Registra os routers existentes
 app.include_router(users.router)
 app.include_router(auth.router)
+
+# 2. Adicione o router da nota fiscal à aplicação
+app.include_router(nota_fiscal_router.router)
