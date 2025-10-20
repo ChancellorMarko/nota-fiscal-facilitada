@@ -1,4 +1,4 @@
-from sqlalchemy import ScalarResult, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.user_model import UserModel as User
@@ -36,8 +36,9 @@ class UserRepository:
             .where(User.phone == user_phone)
         )
 
-    async def list_users(self) -> ScalarResult[User]:
-        return await self.session.scalars(select(User))
+    async def list_users(self) -> list[User]:
+        result = await self.session.scalars(select(User))
+        return result.all()
 
     async def update(
         self,

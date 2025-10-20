@@ -22,8 +22,9 @@ class RoleCreate(RoleBase):
 class RoleUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid')
 
-    name: str
-    description: str
+    # Campos opcionais para atualização parcial (PATCH)
+    name: str | None = None
+    description: str | None = None
 
 
 class RoleRead(RoleBase):

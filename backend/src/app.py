@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from src.routers import auth, users
+from src.routers import auth, users, notas_fiscais
 
 app = FastAPI()
 
@@ -19,5 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Registra os routers existentes
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(notas_fiscais.router)
