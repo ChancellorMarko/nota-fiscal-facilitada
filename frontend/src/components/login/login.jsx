@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ROUTES from '../../router/routes'
+import ROUTES from '../../routes'
 import api from '../../services/api';
 import './loginStyle.css';
 
@@ -38,7 +38,7 @@ function Login() {
             alert('Login realizado com sucesso!');
 
             // Redireciona para a página principal (ajuste a rota conforme necessário)
-            navigator(ROUTES.HOME || '/dashboard');
+            navigator(ROUTES.NFSE_REGISTER);
         } catch (err) {
             console.error('Erro no login:', err);
             setError(err.message || 'Email ou senha incorretos');
