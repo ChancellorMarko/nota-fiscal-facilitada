@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ROUTES from "../../router/routes";
+import ROUTES from "../../routes";
 import api from "../../services/api";
 import './registerStyle.css'
 
