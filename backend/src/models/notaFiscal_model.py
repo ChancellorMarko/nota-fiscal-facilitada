@@ -41,5 +41,9 @@ class NotaFiscal(AbstractBaseModel):
     )
     icms: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
     pis: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-    cofins: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
-    desconto: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
+    cofins: Mapped[Decimal | None] = mapped_column(
+        Numeric(10, 2), nullable=True
+    )
+    desconto: Mapped[Decimal | None] = mapped_column(
+        Numeric(10, 2), nullable=True
+    )

@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class NotaFiscalBase(BaseModel):
     numero_nota: str = Field(..., max_length=50)
     serie: str = Field(..., max_length=20)
@@ -19,9 +20,11 @@ class NotaFiscalBase(BaseModel):
     cofins: Decimal | None = Field(None, ge=0)
     desconto: Decimal | None = Field(None, ge=0)
 
+
 class NotaFiscalCreate(NotaFiscalBase):
     # Proíbe campos extras no payload de criação
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
+
 
 class NotaFiscalRead(NotaFiscalBase):
     # Permite leitura a partir de instâncias ORM/dataclasses
@@ -30,6 +33,7 @@ class NotaFiscalRead(NotaFiscalBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
 
 class NotaFiscalList(BaseModel):
     notas_fiscais: list[NotaFiscalRead]
