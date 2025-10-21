@@ -1,6 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.models.notaFiscal_model import NotaFiscal
+
 
 class NotaFiscalRepository:
     def __init__(self, session: AsyncSession):
