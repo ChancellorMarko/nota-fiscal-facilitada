@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ROUTES from '../../routes';
 import api from '../../services/api';
 import './nfseRegisterStyle.css';
+import docIcon from '../ui/svg/document.svg';
+import errIcon from '../ui/svg/error.svg';
+
+import Navbar from '../ui/navBar';
 
 function CadastroNotaFiscal() {
-
-    // Navigator
-    const navigator = useNavigate();
-
     const [formData, setFormData] = useState({
         numero_nota: '',
         serie: '',
@@ -146,52 +144,15 @@ function CadastroNotaFiscal() {
         setMessage({ type: '', text: '' });
     };
 
-    const handleNavigateToConsulta = () => {
-        return navigator(ROUTES.NFSE_CONSULT);
-    };
-
-    //const handleNavigateToHome = () => {
-    // Navegar para a página de dashboard/home
-    // Não implementado no MVP
-    //};
-
     return (
         <div className="page-container">
             {/* Barra de Navegação */}
-            <div className="navbar">
-                <div className="navbar-content">
-                    <div className="navbar-brand">
-                        <svg className="brand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span className="brand-text">Sistema NF-e</span>
-                    </div>
-
-                    <div className="navbar-links">
-                        {/* Botão para dashboard */}
-                        {/*
-                        <button onClick={handleNavigateToHome} className="nav-link">
-                            Início
-                        </button>
-                    */}
-
-                        <button className="nav-link nav-link-active">
-                            Nova Nota Fiscal
-                        </button>
-
-                        <button onClick={handleNavigateToConsulta} className="nav-link">
-                            Consultar Notas
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <Navbar activeTab="register" />
 
             <div className="page-header">
                 <div className="header-content">
                     <div className="header-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
+                        <img className='header-icon' src={docIcon} alt="document" />
                     </div>
                     <div>
                         <h1 className="page-title">Cadastro de Nota Fiscal</h1>
@@ -203,13 +164,7 @@ function CadastroNotaFiscal() {
             <div className="form-container">
                 {message.text && (
                     <div className={`alert alert-${message.type}`}>
-                        <svg className="alert-icon" fill="currentColor" viewBox="0 0 20 20">
-                            {message.type === 'success' ? (
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            ) : (
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                            )}
-                        </svg>
+                        <img className='alert-icon' src={errIcon} alt="document" />
                         <span>{message.text}</span>
                     </div>
                 )}
