@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ROUTES from '../../routes';
 import api from '../../services/api'
+import serIcon from '../ui/svg/search.svg';
+import errIcon from '../ui/svg/error.svg';
+import Navbar from '../ui/navBar';
 import './nfseConsultationStyle.css';
 
 function ConsultaNotaFiscal() {
-
-    // Navigator
-    const navigate = useNavigate();
-
     const [notasFiscais, setNotasFiscais] = useState([]);
     const [filteredNotas, setFilteredNotas] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -23,58 +20,6 @@ function ConsultaNotaFiscal() {
         data_fim: ''
     });
 
-    // Simulação de dados (substitua pela chamada à sua API)
-    const mockData = [
-        {
-            id: 1,
-            numero_nota: '000123',
-            serie: '1',
-            cfop: '5102',
-            nome_emitente: 'Empresa ABC LTDA',
-            cnpj_emitente: '12.345.678/0001-90',
-            nome_destinatario: 'João Silva',
-            cpf_ou_cnpj_destinatario: '123.456.789-00',
-            valor_total: '1500.00',
-            icms: '270.00',
-            pis: '24.75',
-            cofins: '114.00',
-            desconto: '50.00',
-            created_at: '2025-10-15T10:30:00'
-        },
-        {
-            id: 2,
-            numero_nota: '000124',
-            serie: '1',
-            cfop: '5102',
-            nome_emitente: 'Empresa XYZ S.A.',
-            cnpj_emitente: '98.765.432/0001-10',
-            nome_destinatario: 'Maria Santos',
-            cpf_ou_cnpj_destinatario: '987.654.321-00',
-            valor_total: '2300.50',
-            icms: '414.09',
-            pis: '37.96',
-            cofins: '174.88',
-            desconto: '0.00',
-            created_at: '2025-10-16T14:20:00'
-        },
-        {
-            id: 3,
-            numero_nota: '000125',
-            serie: '2',
-            cfop: '6102',
-            nome_emitente: 'Empresa ABC LTDA',
-            cnpj_emitente: '12.345.678/0001-90',
-            nome_destinatario: 'Comércio Beta LTDA',
-            cpf_ou_cnpj_destinatario: '11.222.333/0001-44',
-            valor_total: '5800.00',
-            icms: '1044.00',
-            pis: '95.70',
-            cofins: '441.00',
-            desconto: '200.00',
-            created_at: '2025-10-17T09:15:00'
-        }
-    ];
-
     useEffect(() => {
         loadNotasFiscais();
     }, []);
@@ -86,6 +31,7 @@ function ConsultaNotaFiscal() {
     const loadNotasFiscais = async () => {
         setLoading(true);
         try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
             const data = await api.listNfse();
             setNotasFiscais(data.notas_fiscais);
             setFilteredNotas(data.notas_fiscais);
@@ -177,52 +123,15 @@ function ConsultaNotaFiscal() {
         });
     };
 
-    const handleNavigateToRegister = () => {
-        navigate(ROUTES.NFSE_REGISTER);
-    };
-
-    //const handleNavigateToHome = () => {
-    // Navegar para a página de dashboard/home
-    // Não implementado no MVP
-    //};
-
     return (
         <div className="page-container">
             {/* Barra de Navegação */}
-            <div className="navbar">
-                <div className="navbar-content">
-                    <div className="navbar-brand">
-                        <svg className="brand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span className="brand-text">Sistema NF-e</span>
-                    </div>
-
-                    <div className="navbar-links">
-                        {/* Botão para dashboard */}
-                        {/*
-                        <button onClick={handleNavigateToHome} className="nav-link">
-                            Início
-                        </button>
-                        */}
-
-                        <button onClick={handleNavigateToRegister} className="nav-link">
-                            Nova Nota Fiscal
-                        </button>
-
-                        <button className="nav-link nav-link-active">
-                            Consultar Notas
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <Navbar activeTab="consult" />
 
             <div className="page-header">
                 <div className="header-content">
                     <div className="header-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                        <img className='header-icon' src={serIcon} alt="search" />
                     </div>
                     <div>
                         <h1 className="page-title">Consulta de Notas Fiscais</h1>
@@ -312,17 +221,11 @@ function ConsultaNotaFiscal() {
 
                     {loading ? (
                         <div className="loading-container">
-                            <svg className="spinner-large" fill="none" viewBox="0 0 24 24">
-                                <circle className="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                <path className="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                            </svg>
                             <p>Carregando notas fiscais...</p>
                         </div>
                     ) : filteredNotas.length === 0 ? (
                         <div className="empty-state">
-                            <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
+                            <img className='empty-icon' src={errIcon} alt="document" />
                             <p>Nenhuma nota fiscal encontrada</p>
                             <span>Tente ajustar os filtros de busca</span>
                         </div>

@@ -5,83 +5,6 @@
     padding: 0;
 }
 
-/* Barra de Navegação */
-.navbar {
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E7EB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.navbar-content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 64px;
-}
-
-.navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.brand-icon {
-    width: 28px;
-    height: 28px;
-    color: #2563EB;
-}
-
-.brand-text {
-    font-size: 18px;
-    font-weight: 700;
-    color: #111827;
-}
-
-.navbar-links {
-    display: flex;
-    gap: 8px;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #4B5563;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.nav-link:hover {
-    background: #F3F4F6;
-    color: #111827;
-}
-
-.nav-link-active {
-    background: #EFF6FF;
-    color: #2563EB;
-}
-
-.nav-link-active:hover {
-    background: #DBEAFE;
-}
-
-.nav-icon {
-    width: 20px;
-    height: 20px;
-}
-
 /* Ajuste do padding do conteúdo */
 .page-header {
     margin: 24px;
@@ -118,7 +41,7 @@
     flex-shrink: 0;
 }
 
-.header-icon svg {
+.header-icon img {
     width: 32px;
     height: 32px;
     color: #2563EB;
@@ -433,7 +356,7 @@
     background: #F3F4F6;
 }
 
-.modal-close svg {
+.modal-close img {
     width: 24px;
     height: 24px;
     color: #6B7280;

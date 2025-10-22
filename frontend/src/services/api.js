@@ -168,7 +168,13 @@ const api = {
       console.error('Erro ao listar NFSes:', error);
       throw error;
     }
-  }
+  },
+
+  // Logout (apenas limpa os tokens de seção)
+  logout: () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('token_type');
+  },
 };
 
 export default api;
