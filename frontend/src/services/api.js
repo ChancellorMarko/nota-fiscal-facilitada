@@ -175,6 +175,21 @@ const api = {
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
   },
+
+  // Busca emitentes para atualizar informações na tela
+  searchEmitentes: () => {
+    // Lógica
+  },
+
+  // Busca os distinatarios para atualizar na tela
+  searchDestinatarios: () => {
+    // Lógica
+  },
+
+  // Atualizar o cache local da aplicação
+  updateCache: () => {
+    // Lógica
+  },
 };
 
 export default api;
