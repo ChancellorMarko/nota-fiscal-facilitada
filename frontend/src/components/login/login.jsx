@@ -37,7 +37,7 @@ function Login() {
 
             alert('Login realizado com sucesso!');
 
-            // Redireciona para a página principal (ajuste a rota conforme necessário)
+            // Redireciona para a página principal
             navigator(ROUTES.NFSE_REGISTER);
         } catch (err) {
             console.error('Erro no login:', err);

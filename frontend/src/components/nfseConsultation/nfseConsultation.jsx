@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../routes';
+import api from '../../services/api'
 import './nfseConsultationStyle.css';
 
 function ConsultaNotaFiscal() {
@@ -85,13 +86,9 @@ function ConsultaNotaFiscal() {
     const loadNotasFiscais = async () => {
         setLoading(true);
         try {
-            // Simulação de requisição à API
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Aqui requisição real para API
-
-            setNotasFiscais(mockData);
-            setFilteredNotas(mockData);
+            const data = await api.listNfse();
+            setNotasFiscais(data.notas_fiscais);
+            setFilteredNotas(data.notas_fiscais);
         } catch (error) {
             console.error('Erro ao carregar notas fiscais:', error);
         } finally {
