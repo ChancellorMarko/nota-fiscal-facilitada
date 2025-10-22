@@ -47,7 +47,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
     DATABASE_SCHEME=seu_schema
     DATABASE_USER=postgres
     DATABASE_PASSWORD=sua_senha
-    DATABASE_DB=espumosa
+    DATABASE_DB=nome_db
     DATABASE_PORT=5432
     DATABASE_SERVER=database
     ```
@@ -56,7 +56,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
 
 2.  **Construa e inicie os serviços Docker:**
 
-    Navegue até o diretório raiz do projeto (`espumosa/`) e execute:
+    Navegue até o diretório raiz do projeto (`src/`) e execute:
 
     ```bash
     docker compose up --build -d
@@ -92,7 +92,7 @@ O projeto utiliza Alembic para gerenciar as migrações do banco de dados. As mi
 
 ### Gerar uma nova migração
 
-Após fazer alterações nos modelos SQLAlchemy (`espumosa/models/`), você pode gerar uma nova migração:
+Após fazer alterações nos modelos SQLAlchemy (`src/models/`), você pode gerar uma nova migração:
 
 1.  **Adicione o model da nova tabela em `__init__.py`:**
 

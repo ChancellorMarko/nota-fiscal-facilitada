@@ -95,6 +95,80 @@ const api = {
 
     return await response.json();
   },
+
+  // Registrar NFSe
+  registerNfse: async (nfseData) => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.');
+    }
+
+    // Converter valores string para número/decimal onde necessário
+    const payload = {
+      numero_nota: nfseData.numero_nota,
+      serie: nfseData.serie,
+      cfop: nfseData.cfop,
+      nome_emitente: nfseData.nome_emitente,
+      cnpj_emitente: nfseData.cnpj_emitente.replace(/\D/g, ''), // Remove formatação
+      nome_destinatario: nfseData.nome_destinatario,
+      cpf_ou_cnpj_destinatario: nfseData.cpf_ou_cnpj_destinatario.replace(/\D/g, ''), // Remove formatação
+      valor_total: parseFloat(nfseData.valor_total) || 0,
+      icms: nfseData.icms ? parseFloat(nfseData.icms) : null,
+      pis: nfseData.pis ? parseFloat(nfseData.pis) : null,
+      cofins: nfseData.cofins ? parseFloat(nfseData.cofins) : null,
+      desconto: nfseData.desconto ? parseFloat(nfseData.desconto) : null,
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/nfse/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro ao registrar nota fiscal');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao registrar NFSe:', error);
+      throw error;
+    }
+  },
+
+  // Listar NFSes
+  listNfse: async () => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.');
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/nfse/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erro ao listar notas fiscais');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao listar NFSes:', error);
+      throw error;
+    }
+  }
 };
 
 export default api;
