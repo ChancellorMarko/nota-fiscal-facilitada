@@ -21,7 +21,7 @@ def get_emitente_repo(
 
 @router.get('/search', status_code=HTTPStatus.OK, response_model=List[EmitenteRead])
 async def search_emitentes(
-    query: str = Query(..., min_length=2, description="Termo de busca"),
+    q: str = Query(..., min_length=2, description="Termo de busca"),
     repo: EmitenteRepository = Depends(get_emitente_repo),
 ):
     """
@@ -29,9 +29,9 @@ async def search_emitentes(
     Retorna no máximo 10 resultados.
     """
     # Remove caracteres especiais do CNPJ para busca
-    q_clean = query.replace('.', '').replace('/', '').replace('-', '')
+    q_clean = q.replace('.', '').replace('/', '').replace('-', '')
 
     # Busca por nome ou CNPJ
-    emitentes = await repo.search(query, q_clean, limit=10)
+    emitentes = await repo.search(q, q_clean, limit=10)
 
     return emitentes

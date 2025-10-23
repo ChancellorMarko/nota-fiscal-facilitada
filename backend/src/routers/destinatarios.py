@@ -21,7 +21,7 @@ def get_destinatario_repo(
 
 @router.get('/search', status_code=HTTPStatus.OK, response_model=List[DestinatarioRead])
 async def search_destinatarios(
-    query: str = Query(..., min_length=2, description="Termo de busca"),
+    q: str = Query(..., min_length=2, description="Termo de busca"),
     repo: DestinatarioRepository = Depends(get_destinatario_repo),
 ):
     """
@@ -29,9 +29,9 @@ async def search_destinatarios(
     Retorna no máximo 10 resultados.
     """
     # Remove caracteres especiais do documento para busca
-    q_clean = query.replace('.', '').replace('/', '').replace('-', '')
+    q_clean = q.replace('.', '').replace('/', '').replace('-', '')
 
     # Busca por nome ou documento
-    destinatarios = await repo.search(query, q_clean, limit=10)
+    destinatarios = await repo.search(q, q_clean, limit=10)
 
     return destinatarios

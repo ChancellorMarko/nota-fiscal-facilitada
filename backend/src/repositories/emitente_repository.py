@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.emitente_model import Emitente
@@ -20,4 +20,24 @@ class EmitenteRepository:
     async def list(self):
         query = select(Emitente)
         result = await self.session.execute(query)
+        return result.scalars().all()
+
+    async def search(self, query: str, query_clean: str, limit: int = 10):
+        """
+        Busca emitentes por nome ou CNPJ.
+        query: termo de busca original
+        query_clean: termo de busca sem formatação (para CNPJ)
+        limit: número máximo de resultados
+        """
+        stmt = (
+            select(Emitente)
+            .where(
+                or_(
+                    Emitente.nome.ilike(f'%{query}%'),
+                    Emitente.cnpj.ilike(f'%{query_clean}%')
+                )
+            )
+            .limit(limit)
+        )
+        result = await self.session.execute(stmt)
         return result.scalars().all()

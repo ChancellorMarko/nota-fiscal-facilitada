@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class DestinatarioBase(BaseModel):
-    name: str
-    cpf: str
-    phone: str | None = None
+    nome: str = Field(alias='name')
+    cpf_cnpj: str = Field(alias='cpf')
+    telefone: str | None = Field(None, alias='phone')
     email: str | None = None
 
 
@@ -14,35 +14,39 @@ class Destinatario(DestinatarioBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    active: bool
+    ativo: bool = Field(alias='active')
 
 
 class DestinatarioCreate(DestinatarioBase):
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
-    name: str
-    cpf: str
-    phone: str | None = None
+    nome: str
+    cpf_cnpj: str
+    telefone: str | None = None
     email: EmailStr | None = None
 
 
 class DestinatarioUpdate(BaseModel):
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
-    name: str | None = None
-    cpf: str | None = None
-    phone: str | None = None
+    nome: str | None = None
+    cpf_cnpj: str | None = None
+    telefone: str | None = None
     email: EmailStr | None = None
-    active: bool | None = None
+    ativo: bool | None = None
 
 
-class DestinatarioRead(DestinatarioBase):
+class DestinatarioRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    nome: str
+    cpf_cnpj: str = Field(validation_alias='cnpj')
+    telefone: str | None = None
+    email: str | None = None
     created_at: datetime
     updated_at: datetime
-    active: bool
+    ativo: bool
 
 
 class DestinatarioList(BaseModel):
@@ -50,4 +54,4 @@ class DestinatarioList(BaseModel):
 
 
 class DestinatarioStatusChanger(BaseModel):
-    active: bool
+    ativo: bool = Field(alias='active')
