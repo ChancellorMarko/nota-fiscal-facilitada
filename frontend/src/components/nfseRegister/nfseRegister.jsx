@@ -3,7 +3,7 @@ import api from '../../services/api';
 import './nfseRegisterStyle.css';
 import docIcon from '../ui/svg/document.svg';
 import errIcon from '../ui/svg/error.svg';
-
+import Autocomplete from '../ui/autoComplete/autoComplete';
 import Navbar from '../ui/navBar';
 
 function CadastroNotaFiscal() {
@@ -33,21 +33,6 @@ function CadastroNotaFiscal() {
         }));
     };
 
-    const formatCurrency = (value) => {
-        const number = value.replace(/\D/g, '');
-        const decimal = (Number(number) / 100).toFixed(2);
-        return decimal;
-    };
-
-    const handleCurrencyChange = (e) => {
-        const { name, value } = e.target;
-        const formatted = formatCurrency(value);
-        setFormData(prev => ({
-            ...prev,
-            [name]: formatted
-        }));
-    };
-
     const formatCNPJ = (value) => {
         const numbers = value.replace(/\D/g, '');
         if (numbers.length <= 11) {
@@ -63,6 +48,30 @@ function CadastroNotaFiscal() {
             ...prev,
             [name]: formatted
         }));
+    };
+
+    // Handler para quando selecionar um emitente do autocomplete
+    const handleEmitenteSelect = (emitente) => {
+        setFormData(prev => ({
+            ...prev,
+            nome_emitente: emitente.nome,
+            cnpj_emitente: formatCNPJ(emitente.cnpj)
+        }));
+
+        // Atualiza cache local
+        api.updateCache('emitentes', emitente);
+    };
+
+    // Handler para quando selecionar um destinatário do autocomplete
+    const handleDestinatarioSelect = (destinatario) => {
+        setFormData(prev => ({
+            ...prev,
+            nome_destinatario: destinatario.nome,
+            cpf_ou_cnpj_destinatario: formatCNPJ(destinatario.cpf_cnpj)
+        }));
+
+        // Atualiza cache local
+        api.updateCache('destinatarios', destinatario);
     };
 
     const validateForm = () => {
@@ -225,13 +234,16 @@ function CadastroNotaFiscal() {
                                 <label className="form-label">
                                     Nome do Emitente <span className="required">*</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <Autocomplete
                                     name="nome_emitente"
                                     value={formData.nome_emitente}
                                     onChange={handleChange}
-                                    className="form-input"
-                                    placeholder="Razão social ou nome completo"
+                                    onSelect={handleEmitenteSelect}
+                                    searchFunction={api.searchEmitentes}
+                                    placeholder="Digite o nome ou CNPJ do emitente"
+                                    displayKey="nome"
+                                    secondaryKey="cnpj"
+                                    minChars={2}
                                     maxLength={100}
                                 />
                             </div>
@@ -261,13 +273,16 @@ function CadastroNotaFiscal() {
                                 <label className="form-label">
                                     Nome do Destinatário <span className="required">*</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <Autocomplete
                                     name="nome_destinatario"
                                     value={formData.nome_destinatario}
                                     onChange={handleChange}
-                                    className="form-input"
-                                    placeholder="Razão social ou nome completo"
+                                    onSelect={handleDestinatarioSelect}
+                                    searchFunction={api.searchDestinatarios}
+                                    placeholder="Digite o nome ou CPF/CNPJ do destinatário"
+                                    displayKey="nome"
+                                    secondaryKey="cpf_cnpj"
+                                    minChars={2}
                                     maxLength={100}
                                 />
                             </div>

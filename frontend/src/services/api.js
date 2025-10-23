@@ -175,6 +175,82 @@ const api = {
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
   },
+
+  // Buscar emitentes (autocomplete)
+  searchEmitentes: async (query) => {
+    try {
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch(`${API_BASE_URL}/emitentes/search?q=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar emitentes');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erro ao buscar emitentes:', error);
+      // Retorna cache local se API falhar
+      return JSON.parse(localStorage.getItem('cached_emitentes') || '[]')
+        .filter(e =>
+          e.nome.toLowerCase().includes(query.toLowerCase()) ||
+          e.cnpj.includes(query)
+        );
+    }
+  },
+
+  // Buscar destinatários (autocomplete)
+  searchDestinatarios: async (query) => {
+    try {
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch(`${API_BASE_URL}/destinatarios/search?q=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar destinatários');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erro ao buscar destinatários:', error);
+      // Retorna cache local se API falhar
+      return JSON.parse(localStorage.getItem('cached_destinatarios') || '[]')
+        .filter(d =>
+          d.nome.toLowerCase().includes(query.toLowerCase()) ||
+          d.cpf_cnpj.includes(query)
+        );
+    }
+  },
+
+  // Atualizar cache local
+  updateCache: (type, data) => {
+    const cacheKey = `cached_${type}`;
+    const existing = JSON.parse(localStorage.getItem(cacheKey) || '[]');
+
+    // Adiciona novo item se não existir
+    const exists = existing.find(item =>
+      type === 'emitentes'
+        ? item.cnpj === data.cnpj
+        : item.cpf_cnpj === data.cpf_cnpj
+    );
+
+    if (!exists) {
+      existing.push(data);
+      localStorage.setItem(cacheKey, JSON.stringify(existing.slice(-50))); // Mantém últimos 50
+    }
+  },
 };
 
 export default api;
