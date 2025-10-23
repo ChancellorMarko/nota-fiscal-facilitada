@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.routers import auth, notas_fiscais, users
+from src.routers import auth, destinatarios, emitentes, notas_fiscais, users
 
 app = FastAPI()
 
@@ -23,3 +23,5 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(notas_fiscais.router)
+app.include_router(emitentes.router)
+app.include_router(destinatarios.router)

@@ -110,11 +110,11 @@ Após fazer alterações nos modelos SQLAlchemy (`src/models/`), você pode gera
 3.  **Gere a migração:**
 
     ```bash
-    task new_migration "Descrição da sua migração"
+    alembic revision --autogenerate -m "Descrição da nova migração"
     ```
 
     Isso criará um novo arquivo de migração em `migrations/versions/`.
-
+    
 ### Aplicar migrações
 
 Para aplicar as migrações pendentes ao seu banco de dados:
