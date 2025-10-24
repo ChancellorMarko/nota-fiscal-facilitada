@@ -16,15 +16,14 @@ from src.security import (
 )
 
 INCORRECT_FIELDS = HTTPException(
-    status_code=HTTPStatus.UNAUTHORIZED,
-    detail='Incorrect email or password'
+    status_code=HTTPStatus.UNAUTHORIZED, detail='Incorrect email or password'
 )
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 
 def get_user_repository(
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
 ) -> UserRepository:
     return UserRepository(session)
 
@@ -35,28 +34,23 @@ UserRepo = Annotated[UserRepository, Depends(get_user_repository)]
 @router.post('/token', response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    user_repo: UserRepo
+    user_repo: UserRepo,
 ):
     user = await user_repo.get_by_email(form_data.username)
 
     if not user:
         raise INCORRECT_FIELDS
 
-    if not PasswordHasher.check(
-        form_data.password,
-        user.password
-    ):
+    if not PasswordHasher.check(form_data.password, user.password):
         raise INCORRECT_FIELDS
 
-    access_token = create_access_token(
-        {'sub': user.email}
-    )
+    access_token = create_access_token({'sub': user.email})
     return {'access_token': access_token, 'token_type': 'Bearer'}
 
 
 @router.post('/refresh_token', response_model=Token)
 async def refresh_access_token(
-    user: Annotated[UserModel, Depends(get_current_user)]
+    user: Annotated[UserModel, Depends(get_current_user)],
 ):
     new_access_token = create_access_token(data={'sub': user.email})
 

@@ -26,5 +26,5 @@ class AbstractBaseModel:
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False,
-        init=False
+        init=False,
     )

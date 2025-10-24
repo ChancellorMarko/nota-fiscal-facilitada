@@ -16,13 +16,13 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Configuração da URL do banco de dados
-section = config.config_ini_section
-config.set_section_option(section, "DATABASE_USER", os.getenv("DATABASE_USER", "postgres"))
-config.set_section_option(section, "DATABASE_PASSWORD", os.getenv("DATABASE_PASSWORD", "postgres"))
-config.set_section_option(section, "DATABASE_SERVER", os.getenv("DATABASE_SERVER", "localhost"))
-config.set_section_option(section, "DATABASE_PORT", os.getenv("DATABASE_PORT", "5432"))
-config.set_section_option(section, "DATABASE_DB", os.getenv("DATABASE_DB", "nfse-db"))
+# Configura a URL do banco de dados a partir da variável de ambiente
+database_url = os.getenv("DATABASE_URL")
+if database_url:
+    # Garante que está usando asyncpg
+    if 'postgresql://' in database_url and 'asyncpg' not in database_url:
+        database_url = database_url.replace('postgresql://', 'postgresql+asyncpg://')
+    config.set_main_option("sqlalchemy.url", database_url)
 
 # Metadata para o Alembic detectar os modelos
 target_metadata = table_registry.metadata
@@ -42,15 +42,19 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Executa migrações em modo 'online'."""
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+
+    from sqlalchemy import create_engine
+
+    database_url = os.getenv("DATABASE_URL")
+    if database_url and 'asyncpg' in database_url:
+        # Converte para psycopg (síncrono) para o Alembic
+        database_url = database_url.replace('postgresql+asyncpg://', 'postgresql+psycopg://')
+
+    connectable = create_engine(database_url)
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata
         )
 

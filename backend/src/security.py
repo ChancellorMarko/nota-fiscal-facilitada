@@ -16,7 +16,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
 def get_user_repository(
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
 ) -> UserRepository:
     return UserRepository(session)
 
@@ -64,12 +64,12 @@ def create_access_token(data: dict):
 
 async def get_current_user(
     user_repo: UserRepository = Depends(get_user_repository),
-    token: str = Depends(oauth2_scheme)
+    token: str = Depends(oauth2_scheme),
 ):
     credentials_exception = HTTPException(
         status_code=HTTPStatus.UNAUTHORIZED,
         detail='Could not validate credentials',
-        headers={'WWW-Authenticate': 'Bearer'}
+        headers={'WWW-Authenticate': 'Bearer'},
     )
 
     try:

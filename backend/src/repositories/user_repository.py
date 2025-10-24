@@ -26,14 +26,12 @@ class UserRepository:
 
     async def get_by_email(self, user_email: str) -> User | None:
         return await self.session.scalar(
-            select(User)
-            .where(User.email == user_email)
+            select(User).where(User.email == user_email)
         )
 
     async def get_by_phone(self, user_phone: str) -> User | None:
         return await self.session.scalar(
-            select(User)
-            .where(User.phone == user_phone)
+            select(User).where(User.phone == user_phone)
         )
 
     async def list_users(self) -> list[User]:
@@ -41,9 +39,7 @@ class UserRepository:
         return result.all()
 
     async def update(
-        self,
-        user_id: int,
-        user_update: UserUpdate | UserStatusChanger
+        self, user_id: int, user_update: UserUpdate | UserStatusChanger
     ) -> User | None:
         user = await self.get_by_id(user_id)
         if not user:
