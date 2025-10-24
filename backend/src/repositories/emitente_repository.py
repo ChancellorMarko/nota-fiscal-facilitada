@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.emitente_model import EmitenteModel
 
 
-class EmitenteModelRepository:
+class EmitenteRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 

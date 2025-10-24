@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import Boolean, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.models.abstract_base import AbstractBaseModel

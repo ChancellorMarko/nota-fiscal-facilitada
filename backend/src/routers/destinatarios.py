@@ -78,7 +78,7 @@ async def get_destinatario_by_id(destinatario_id: int, repo: DestinatarioRepo):
 )
 async def search_destinatarios(
     q: str = Query(..., min_length=2, description='Termo de busca'),
-    repo: DestinatarioRepo = Depends(get_destinatario_repo),
+    repo: DestinatarioRepository = Depends(get_destinatario_repo),
 ):
     """
     Busca destinatários por nome ou CPF/CNPJ para autocomplete.

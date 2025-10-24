@@ -70,7 +70,7 @@ async def get_emitente_by_id(emitente_id: int, repo: EmitenteRepo):
 )
 async def search_emitentes(
     q: str = Query(..., min_length=2, description='Termo de busca'),
-    repo: EmitenteRepo = Depends(get_emitente_repo),
+    repo: EmitenteRepository = Depends(get_emitente_repo)
 ):
     """
     Busca emitentes por nome ou CNPJ para autocomplete.
