@@ -17,6 +17,11 @@ class DestinatarioRepository:
     async def get_by_id(self, destinatario_id: int):
         return await self.session.get(Destinatario, destinatario_id)
 
+    async def get_by_cpf_cnpj(self, documento: str):
+        return await self.session.scalar(
+            select(Destinatario).where(Destinatario.cnpj == documento)
+        )
+
     async def list(self):
         query = select(Destinatario)
         result = await self.session.execute(query)
@@ -34,7 +39,7 @@ class DestinatarioRepository:
             .where(
                 or_(
                     Destinatario.nome.ilike(f'%{query}%'),
-                    Destinatario.cnpj.ilike(f'%{query_clean}%')
+                    Destinatario.cnpj.ilike(f'%{query_clean}%'),
                 )
             )
             .limit(limit)

@@ -10,8 +10,12 @@ class Destinatario(AbstractBaseModel):
     __tablename__ = 'destinatarios'
 
     nome: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    cnpj: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
-    telefone: Mapped[str] = mapped_column(String(20), nullable=True, index=True)
+    cnpj: Mapped[str] = mapped_column(
+        String(20), unique=True, nullable=False, index=True
+    )
+    telefone: Mapped[str] = mapped_column(
+        String(20), nullable=True, index=True
+    )
     email: Mapped[str] = mapped_column(String(100), nullable=True, index=True)
     ativo: Mapped[bool] = mapped_column(
         Boolean, default=True, server_default=text('true'), nullable=False
