@@ -1,50 +1,57 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class EmitenteBase(BaseModel):
-    nome: str = Field(alias='name')
+    name: str
     cnpj: str
-    telefone: str | None = Field(None, alias='phone')
-    email: str | None = None
+    phone: str
+    email: str
 
 
 class Emitente(EmitenteBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    active: bool
 
 
 class EmitenteCreate(EmitenteBase):
     model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
-    nome: str
+    name: str
     cnpj: str
-    telefone: str | None = None
-    email: EmailStr | None = None
+    phone: str
+    email: EmailStr
 
 
 class EmitenteUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
-    nome: str | None = None
-    cnpj: str | None = None
-    telefone: str | None = None
-    email: EmailStr | None = None
+    name: str
+    cnpj: str
+    phone: str
+    email: EmailStr
+    active: bool
 
 
 class EmitenteRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    nome: str
+    name: str
     cnpj: str
-    telefone: str | None = None
-    email: str | None = None
+    phone: str
+    email: str
     created_at: datetime
     updated_at: datetime
+    active: bool
 
 
-class EmitenteList(BaseModel):
+class EmitenteToList(BaseModel):
     emitentes: list[EmitenteRead]
+
+
+class EmitenteStatusChanget(BaseModel):
+    active: bool

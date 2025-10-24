@@ -1,17 +1,18 @@
 from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query, HTTPException
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.database import get_session
+from src.models.destinatario_model import DestinatarioModel
 from src.repositories.destinatario_repository import DestinatarioRepository
 from src.schemas.destinatario_schema import (
     DestinatarioCreate,
-    DestinatarioUpdate,
     DestinatarioList,
     DestinatarioRead,
+    DestinatarioUpdate,
 )
-from src.models.destinatario_model import DestinatarioModel
 
 router = APIRouter(prefix='/destinatarios', tags=['destinatarios'])
 
@@ -22,18 +23,21 @@ def get_destinatario_repo(
     return DestinatarioRepository(session)
 
 
-DestinatarioRepo = Annotated[DestinatarioRepository, Depends(get_destinatario_repo)]
+DestinatarioRepo = Annotated[
+    DestinatarioRepository, Depends(get_destinatario_repo)
+]
 
 
-@router.post('/', status_code=HTTPStatus.CREATED, response_model=DestinatarioRead)
+@router.post(
+    '/', status_code=HTTPStatus.CREATED, response_model=DestinatarioRead
+)
 async def create_destinatario(
-    destinatario_in: DestinatarioCreate,
-    repo: DestinatarioRepo
+    destinatario_in: DestinatarioCreate, repo: DestinatarioRepo
 ):
     if await repo.get_by_cpf_cnpj(destinatario_in.cpf_cnpj):
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
-            detail='Destinatario with this CPF/CNPJ already exists!'
+            detail='Destinatario with this CPF/CNPJ already exists!',
         )
 
     destinatario = DestinatarioModel(
@@ -52,26 +56,29 @@ async def list_destinatarios(repo: DestinatarioRepo):
     return {'destinatarios': destinatarios}
 
 
-@router.get('/{destinatario_id}', status_code=HTTPStatus.OK, response_model=DestinatarioRead)
-async def get_destinatario_by_id(
-    destinatario_id: int,
-    repo: DestinatarioRepo
-):
+@router.get(
+    '/{destinatario_id}',
+    status_code=HTTPStatus.OK,
+    response_model=DestinatarioRead,
+)
+async def get_destinatario_by_id(destinatario_id: int, repo: DestinatarioRepo):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
     if not db_destinatario:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Destinatario with this ID does not exist!'
+            detail='Destinatario with this ID does not exist!',
         )
 
     return db_destinatario
 
 
-@router.get('/search', status_code=HTTPStatus.OK, response_model=DestinatarioList)
+@router.get(
+    '/search', status_code=HTTPStatus.OK, response_model=DestinatarioList
+)
 async def search_destinatarios(
-    q: str = Query(..., min_length=2, description="Termo de busca"),
-    repo: DestinatarioRepo
+    q: str = Query(..., min_length=2, description='Termo de busca'),
+    repo: DestinatarioRepo = Depends(get_destinatario_repo),
 ):
     """
     Busca destinatários por nome ou CPF/CNPJ para autocomplete.
@@ -86,28 +93,35 @@ async def search_destinatarios(
     return destinatarios
 
 
-@router.patch('/{destinatario_id}', status_code=HTTPStatus.OK, response_model=DestinatarioRead)
+@router.patch(
+    '/{destinatario_id}',
+    status_code=HTTPStatus.OK,
+    response_model=DestinatarioRead,
+)
 async def update_destinatario(
     destinatario_id: int,
     destinatario_in: DestinatarioUpdate,
-    repo: DestinatarioRepo
+    repo: DestinatarioRepo,
 ):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
     if not db_destinatario:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Destinatario with this ID does not exist!'
+            detail='Destinatario with this ID does not exist!',
         )
 
     updated_destinatario = await repo.update(destinatario_id, destinatario_in)
     return updated_destinatario
 
 
-@router.patch('/{destinatario_id}/deactivate', status_code=HTTPStatus.OK, response_model=DestinatarioRead)
+@router.patch(
+    '/{destinatario_id}/deactivate',
+    status_code=HTTPStatus.OK,
+    response_model=DestinatarioRead,
+)
 async def deactivate_destinatario(
-    destinatario_id: int,
-    repo: DestinatarioRepo
+    destinatario_id: int, repo: DestinatarioRepo
 ):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
@@ -128,11 +142,12 @@ async def deactivate_destinatario(
     return updated_destinatario
 
 
-@router.patch('/{destinatario_id}/activate', status_code=HTTPStatus.OK, response_model=DestinatarioRead)
-async def activate_destinatario(
-    destinatario_id: int,
-    repo: DestinatarioRepo
-):
+@router.patch(
+    '/{destinatario_id}/activate',
+    status_code=HTTPStatus.OK,
+    response_model=DestinatarioRead,
+)
+async def activate_destinatario(destinatario_id: int, repo: DestinatarioRepo):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
     if not db_destinatario:

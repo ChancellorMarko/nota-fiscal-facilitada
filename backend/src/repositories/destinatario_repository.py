@@ -8,7 +8,9 @@ class DestinatarioRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create(self, destinatario: DestinatarioModel) -> DestinatarioModel:
+    async def create(
+        self, destinatario: DestinatarioModel
+    ) -> DestinatarioModel:
         self.session.add(destinatario)
         await self.session.commit()
         await self.session.refresh(destinatario)
@@ -19,7 +21,9 @@ class DestinatarioRepository:
 
     async def get_by_cpf_cnpj(self, documento: str):
         return await self.session.scalar(
-            select(DestinatarioModel).where(DestinatarioModel.cnpj == documento)
+            select(DestinatarioModel).where(
+                DestinatarioModel.cnpj == documento
+            )
         )
 
     async def list(self):
