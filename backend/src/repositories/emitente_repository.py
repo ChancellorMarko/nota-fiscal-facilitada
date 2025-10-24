@@ -34,7 +34,7 @@ class EmitenteRepository:
             .where(
                 or_(
                     Emitente.nome.ilike(f'%{query}%'),
-                    Emitente.cnpj.ilike(f'%{query_clean}%')
+                    Emitente.cnpj.ilike(f'%{query_clean}%'),
                 )
             )
             .limit(limit)

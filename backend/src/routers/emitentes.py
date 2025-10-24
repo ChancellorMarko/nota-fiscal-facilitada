@@ -19,9 +19,11 @@ def get_emitente_repo(
     return EmitenteRepository(session)
 
 
-@router.get('/search', status_code=HTTPStatus.OK, response_model=List[EmitenteRead])
+@router.get(
+    '/search', status_code=HTTPStatus.OK, response_model=List[EmitenteRead]
+)
 async def search_emitentes(
-    q: str = Query(..., min_length=2, description="Termo de busca"),
+    q: str = Query(..., min_length=2, description='Termo de busca'),
     repo: EmitenteRepository = Depends(get_emitente_repo),
 ):
     """

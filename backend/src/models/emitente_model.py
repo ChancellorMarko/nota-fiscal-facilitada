@@ -10,6 +10,10 @@ class Emitente(AbstractBaseModel):
     __tablename__ = 'emitentes'
 
     nome: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    cnpj: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
-    telefone: Mapped[str] = mapped_column(String(20), nullable=True, index=True)
+    cnpj: Mapped[str] = mapped_column(
+        String(20), unique=True, nullable=False, index=True
+    )
+    telefone: Mapped[str] = mapped_column(
+        String(20), nullable=True, index=True
+    )
     email: Mapped[str] = mapped_column(String(100), nullable=True, index=True)

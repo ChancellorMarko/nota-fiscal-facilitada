@@ -33,7 +33,7 @@ async def create_nota_fiscal(
 ):
     nota_fiscal = NotaFiscal(
         **nota_fiscal_in.model_dump(),
-        #user_id=current_user.id,  # Associa a nota ao usuário logado
+        # user_id=current_user.id,  # Associa a nota ao usuário logado
     )
     return await repo.create(nota_fiscal)
 
