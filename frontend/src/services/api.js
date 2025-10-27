@@ -251,6 +251,198 @@ const api = {
       localStorage.setItem(cacheKey, JSON.stringify(existing.slice(-50))); // Mantém últimos 50
     }
   },
+
+  // CRUD Emitentes
+  createEmitente: async (emitenteData) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/emitentes/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(emitenteData),
+      });
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Erro ao cadastrar emitente');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Erro ao criar emitente:', error);
+      throw error;
+    }
+  },
+
+  listEmitentes: async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/emitentes/`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erro ao listar emitentes:', error);
+      throw error;
+    }
+  },
+
+  getEmitenteById: async (id) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error('Emitente não encontrado');
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao buscar emitente:', error);
+      throw error;
+    }
+  },
+
+  updateEmitente: async (id, emitenteData) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(emitenteData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao atualizar');
+      return data;
+    } catch (error) {
+      console.error('Erro ao atualizar emitente:', error);
+      throw error;
+    }
+  },
+
+  toggleEmitenteStatus: async (id, activate) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const endpoint = activate ? 'activate' : 'deactivate';
+      const response = await fetch(`${API_BASE_URL}/emitentes/${id}/${endpoint}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao alterar status');
+      return data;
+    } catch (error) {
+      console.error('Erro ao alterar status do emitente:', error);
+      throw error;
+    }
+  },
+
+  // CRUD Destinatários
+  createDestinatario: async (destinatarioData) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(destinatarioData),
+      });
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Erro ao cadastrar destinatário');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Erro ao criar destinatário:', error);
+      throw error;
+    }
+  },
+
+  listDestinatarios: async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erro ao listar destinatários:', error);
+      throw error;
+    }
+  },
+
+  getDestinatarioById: async (id) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error('Destinatário não encontrado');
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao buscar destinatário:', error);
+      throw error;
+    }
+  },
+
+  updateDestinatario: async (id, destinatarioData) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(destinatarioData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao atualizar');
+      return data;
+    } catch (error) {
+      console.error('Erro ao atualizar destinatário:', error);
+      throw error;
+    }
+  },
+
+  toggleDestinatarioStatus: async (id, activate) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const endpoint = activate ? 'activate' : 'deactivate';
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}/${endpoint}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao alterar status');
+      return data;
+    } catch (error) {
+      console.error('Erro ao alterar status do destinatário:', error);
+      throw error;
+    }
+  },
 };
 
 export default api;
