@@ -48,7 +48,9 @@ class EmitenteRepository:
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def update(self, emitente_id: int, emitente_update: EmitenteUpdate) -> EmitenteModel:
+    async def update(
+        self, emitente_id: int, emitente_update: EmitenteUpdate
+    ) -> EmitenteModel:
         """
         Atualiza um emitente com os dados fornecidos
         """

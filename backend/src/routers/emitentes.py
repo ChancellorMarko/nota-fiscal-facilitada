@@ -4,6 +4,7 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.security import get_current_user
 from src.db.database import get_session
 from src.models.emitente_model import EmitenteModel
 from src.models.user_model import UserModel
@@ -15,7 +16,6 @@ from src.schemas.emitente_schema import (
     EmitenteToList,
     EmitenteUpdate,
 )
-from src.security import get_current_user
 
 router = APIRouter(prefix='/emitentes', tags=['emitentes'])
 
