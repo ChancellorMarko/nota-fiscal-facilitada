@@ -283,8 +283,6 @@ const api = {
     }
   },
 
-
-
   // CRUD Emitentes
   createEmitente: async (emitenteData) => {
     try {
@@ -295,7 +293,7 @@ const api = {
         email: emitenteData.email,
       };
 
-      console.log('Enviando para API:', payload); // ← DEBUG
+      //console.log('Enviando para API:', payload); // ← DEBUG
 
       const response = await fetch(`${API_BASE_URL}/emitentes/`, {
         method: 'POST',
@@ -335,7 +333,7 @@ const api = {
         active: true
       };
 
-      console.log('Enviando atualização:', payload); // DEBUG
+      //console.log('Enviando atualização:', payload); // DEBUG
 
       const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
         method: 'PATCH',
@@ -371,24 +369,22 @@ const api = {
   // CRUD Destinatários
   createDestinatario: async (destinatarioData) => {
     try {
-      const token = localStorage.getItem('access_token');
+       const payload = {
+        name: destinatarioData.name || '',
+        cpf_cnpj: (destinatarioData.cpf_cnpj || '').replace(/\D/g, ''),
+        phone: destinatarioData.phone || '',
+        email: destinatarioData.email || '',
+      };
+
+      console.log('Criando destinatário:', payload); // DEBUG
+
       const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(destinatarioData),
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
       });
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
-
-      if (!response.ok) {
-        throw new Error(data.detail || 'Erro ao cadastrar destinatário');
-      }
-
-      return data;
+      return await handleResponse(response);
     } catch (error) {
       console.error('Erro ao criar destinatário:', error);
       throw error;
@@ -397,12 +393,12 @@ const api = {
 
   listDestinatarios: async () => {
     try {
-      const token = localStorage.getItem('access_token');
       const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: getAuthHeaders(),
       });
 
-      const data = await response.json();
+      const data = await handleResponse(response);
+      //console.log('Destinatários recebidos:', data); // DEBUG
       return data;
     } catch (error) {
       console.error('Erro ao listar destinatários:', error);
@@ -427,19 +423,22 @@ const api = {
 
   updateDestinatario: async (id, destinatarioData) => {
     try {
-      const token = localStorage.getItem('access_token');
+      const payload = {
+        name: destinatarioData.nome,
+        cpf_cnpj: destinatarioData.cpf_cnpj.replace(/\D/g, ''),
+        phone: destinatarioData.telefone,
+        email: destinatarioData.email,
+      };
+
+      console.log('Atualizando destinatário:', payload); // DEBUG
+
       const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(destinatarioData),
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || 'Erro ao atualizar');
-      return data;
+      return await handleResponse(response);
     } catch (error) {
       console.error('Erro ao atualizar destinatário:', error);
       throw error;
@@ -448,16 +447,13 @@ const api = {
 
   toggleDestinatarioStatus: async (id, activate) => {
     try {
-      const token = localStorage.getItem('access_token');
       const endpoint = activate ? 'activate' : 'deactivate';
       const response = await fetch(`${API_BASE_URL}/destinatarios/${id}/${endpoint}`, {
         method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: getAuthHeaders(),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || 'Erro ao alterar status');
-      return data;
+      return await handleResponse(response);
     } catch (error) {
       console.error('Erro ao alterar status do destinatário:', error);
       throw error;
