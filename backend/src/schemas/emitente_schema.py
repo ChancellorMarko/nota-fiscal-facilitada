@@ -7,7 +7,7 @@ class EmitenteBase(BaseModel):
     name: str
     cnpj: str
     phone: str
-    email: str
+    email: EmailStr
 
 
 class Emitente(EmitenteBase):
@@ -19,11 +19,6 @@ class Emitente(EmitenteBase):
 
 class EmitenteCreate(EmitenteBase):
     model_config = ConfigDict(extra='forbid', populate_by_name=True)
-
-    name: str
-    cnpj: str
-    phone: str
-    email: EmailStr
 
 
 class EmitenteUpdate(BaseModel):
@@ -53,5 +48,5 @@ class EmitenteToList(BaseModel):
     emitentes: list[EmitenteRead]
 
 
-class EmitenteStatusChanget(BaseModel):
+class EmitenteStatusChanger(BaseModel):
     active: bool

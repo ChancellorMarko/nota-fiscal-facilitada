@@ -2,6 +2,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.emitente_model import EmitenteModel
+from src.schemas.emitente_schema import EmitenteUpdate
 
 
 class EmitenteRepository:
@@ -19,10 +20,10 @@ class EmitenteRepository:
 
     async def get_by_cnpj(self, cnpj: str):
         return await self.session.scalar(
-            select(EmitenteModelModel).where(EmitenteModelModel.cnpj == cnpj)
+            select(EmitenteModel).where(EmitenteModel.cnpj == cnpj)
         )
 
-    async def list(self):
+    async def list_emitentes(self):
         query = select(EmitenteModel)
         result = await self.session.execute(query)
         return result.scalars().all()
@@ -38,7 +39,7 @@ class EmitenteRepository:
             select(EmitenteModel)
             .where(
                 or_(
-                    EmitenteModel.nome.ilike(f'%{query}%'),
+                    EmitenteModel.name.ilike(f'%{query}%'),
                     EmitenteModel.cnpj.ilike(f'%{query_clean}%'),
                 )
             )
@@ -46,3 +47,21 @@ class EmitenteRepository:
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def update(self, emitente_id: int, emitente_update: EmitenteUpdate) -> EmitenteModel:
+        """
+        Atualiza um emitente com os dados fornecidos
+        """
+        db_emitente = await self.get_by_id(emitente_id)
+
+        if not db_emitente:
+            return None
+
+        # Atualiza os campos
+        update_data = emitente_update.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(db_emitente, field, value)
+
+        await self.session.commit()
+        await self.session.refresh(db_emitente)
+        return db_emitente

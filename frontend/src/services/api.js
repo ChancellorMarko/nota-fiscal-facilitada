@@ -1,5 +1,36 @@
-// src/services/api.js
-const API_BASE_URL = 'http://localhost:8000'; // Ajuste para a URL da sua API
+const API_BASE_URL = 'http://localhost:8000';
+
+// Função para lidar com respostas da API
+const handleResponse = async (response) => {
+  const text = await response.text();
+
+  if (!text) {
+    if (response.ok) return {};
+    throw new Error('Servidor retornou resposta vazia');
+  }
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error('JSON parse error:', e);
+    throw new Error('Resposta inválida do servidor');
+  }
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Erro na requisição');
+  }
+
+  return data;
+};
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('access_token');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+};
 
 const api = {
   // Registro de usuário
@@ -252,27 +283,27 @@ const api = {
     }
   },
 
+
+
   // CRUD Emitentes
   createEmitente: async (emitenteData) => {
     try {
-      const token = localStorage.getItem('access_token');
+      const payload = {
+        name: emitenteData.nome,
+        cnpj: emitenteData.cnpj,
+        phone: emitenteData.telefone,
+        email: emitenteData.email,
+      };
+
+      console.log('Enviando para API:', payload); // ← DEBUG
+
       const response = await fetch(`${API_BASE_URL}/emitentes/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(emitenteData),
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
       });
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
-
-      if (!response.ok) {
-        throw new Error(data.detail || 'Erro ao cadastrar emitente');
-      }
-
-      return data;
+      return await handleResponse(response);
     } catch (error) {
       console.error('Erro ao criar emitente:', error);
       throw error;
@@ -281,12 +312,12 @@ const api = {
 
   listEmitentes: async () => {
     try {
-      const token = localStorage.getItem('access_token');
       const response = await fetch(`${API_BASE_URL}/emitentes/`, {
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: getAuthHeaders(),
       });
 
-      const data = await response.json();
+      const data = await handleResponse(response);
+      //console.log('Dados recebidos:', data); // DEBUG
       return data;
     } catch (error) {
       console.error('Erro ao listar emitentes:', error);
@@ -294,36 +325,25 @@ const api = {
     }
   },
 
-  getEmitenteById: async (id) => {
-    try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error('Emitente não encontrado');
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao buscar emitente:', error);
-      throw error;
-    }
-  },
-
   updateEmitente: async (id, emitenteData) => {
     try {
-      const token = localStorage.getItem('access_token');
+      const payload = {
+        name: emitenteData.nome,
+        cnpj: emitenteData.cnpj.replace(/\D/g, ''),
+        phone: emitenteData.telefone,
+        email: emitenteData.email,
+        active: true
+      };
+
+      console.log('Enviando atualização:', payload); // DEBUG
+
       const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(emitenteData),
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || 'Erro ao atualizar');
-      return data;
+      return await handleResponse(response);
     } catch (error) {
       console.error('Erro ao atualizar emitente:', error);
       throw error;
