@@ -369,14 +369,14 @@ const api = {
   // CRUD Destinatários
   createDestinatario: async (destinatarioData) => {
     try {
-       const payload = {
-        name: destinatarioData.name || '',
-        cpf_cnpj: (destinatarioData.cpf_cnpj || '').replace(/\D/g, ''),
-        phone: destinatarioData.phone || '',
-        email: destinatarioData.email || '',
+      const payload = {
+        name: destinatarioData.name,
+        cpf_cnpj: destinatarioData.cpf_cnpj.replace(/\D/g, ''),
+        phone: destinatarioData.phone,
+        email: destinatarioData.email,
       };
 
-      console.log('Criando destinatário:', payload); // DEBUG
+      //console.log('🔍 DEBUG - Payload final:', payload);
 
       const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
         method: 'POST',
@@ -424,13 +424,13 @@ const api = {
   updateDestinatario: async (id, destinatarioData) => {
     try {
       const payload = {
-        name: destinatarioData.nome,
+        name: destinatarioData.name,
         cpf_cnpj: destinatarioData.cpf_cnpj.replace(/\D/g, ''),
-        phone: destinatarioData.telefone,
+        phone: destinatarioData.phone,
         email: destinatarioData.email,
       };
 
-      console.log('Atualizando destinatário:', payload); // DEBUG
+      //  console.log('Atualizando destinatário:', payload); // DEBUG
 
       const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
         method: 'PATCH',

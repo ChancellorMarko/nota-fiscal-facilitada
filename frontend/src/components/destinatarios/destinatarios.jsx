@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../../services/api.js';
 import Navbar from '../ui/navBar/navBar';
 import usersIcon from '../ui/svg/users.svg';
@@ -12,7 +11,6 @@ import cancelIcon from '../ui/svg/cancel.svg';
 import './destinatariosStyle.css';
 
 function Destinatarios() {
-    const navigate = useNavigate();
     const [destinatarios, setDestinatarios] = useState([]);
     const [filteredDestinatarios, setFilteredDestinatarios] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -86,12 +84,12 @@ function Destinatarios() {
         setSelectedDestinatario(destinatario);
 
         if (mode === 'create') {
-            setFormData({ nome: '', cpf_cnpj: '', telefone: '', email: '' });
+            setFormData({ name: '', cpf_cnpj: '', phone: '', email: '' });
         } else if (destinatario) {
             setFormData({
-                nome: destinatario.name,
+                name: destinatario.name,
                 cpf_cnpj: formatDocument(destinatario.cpf_cnpj),
-                telefone: destinatario.phone || '',
+                phone: destinatario.phone || '',
                 email: destinatario.email || ''
             });
         }
@@ -103,7 +101,7 @@ function Destinatarios() {
     const closeModal = () => {
         setShowModal(false);
         setSelectedDestinatario(null);
-        setFormData({ nome: '', cpf_cnpj: '', telefone: '', email: '' });
+        setFormData({ name: '', cpf_cnpj: '', phone: '', email: '' });
     };
 
     const handleSubmit = async (e) => {
@@ -113,9 +111,9 @@ function Destinatarios() {
 
         try {
             const dataToSend = {
-                nome: formData.name,
+                name: formData.name,
                 cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
-                telefone: formData.phone,
+                phone: formData.phone,
                 email: formData.email
             };
 
@@ -181,7 +179,7 @@ function Destinatarios() {
                         <img className='search-icon' src={serIcon} alt="search" />
                         <input
                             type="text"
-                            placeholder="Buscar por nome ou CPF/CNPJ..."
+                            placeholder="Buscar por name ou CPF/CNPJ..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="search-input"
@@ -271,7 +269,7 @@ function Destinatarios() {
                         <form onSubmit={handleSubmit} className="modal-body">
                             <div className="form-group">
                                 <label className="form-label">Nome <span className="required">*</span></label>
-                                <input type="text" name="nome" value={formData.name} onChange={handleInputChange} className="form-input" placeholder="Nome do destinatário" required disabled={modalMode === 'view'} />
+                                <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="form-input" placeholder="Nome do destinatário" required disabled={modalMode === 'view'} />
                             </div>
 
                             <div className="form-group">
@@ -281,7 +279,7 @@ function Destinatarios() {
 
                             <div className="form-group">
                                 <label className="form-label">Telefone</label>
-                                <input type="tel" name="telefone" value={formData.phone} onChange={handleInputChange} className="form-input" placeholder="(00) 00000-0000" disabled={modalMode === 'view'} />
+                                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="form-input" placeholder="(00) 00000-0000" disabled={modalMode === 'view'} />
                             </div>
 
                             <div className="form-group">
