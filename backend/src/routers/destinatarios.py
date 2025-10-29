@@ -1,11 +1,12 @@
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.database import get_session
 from src.models.destinatario_model import DestinatarioModel
+from src.models.user_model import UserModel
 from src.repositories.destinatario_repository import DestinatarioRepository
 from src.schemas.destinatario_schema import (
     DestinatarioCreate,
@@ -13,6 +14,7 @@ from src.schemas.destinatario_schema import (
     DestinatarioRead,
     DestinatarioUpdate,
 )
+from src.security import get_current_user
 
 router = APIRouter(prefix='/destinatarios', tags=['destinatarios'])
 
@@ -32,7 +34,9 @@ DestinatarioRepo = Annotated[
     '/', status_code=HTTPStatus.CREATED, response_model=DestinatarioRead
 )
 async def create_destinatario(
-    destinatario_in: DestinatarioCreate, repo: DestinatarioRepo
+    destinatario_in: DestinatarioCreate,
+    repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
 ):
     if await repo.get_by_cpf_cnpj(destinatario_in.cpf_cnpj):
         raise HTTPException(
@@ -41,9 +45,9 @@ async def create_destinatario(
         )
 
     destinatario = DestinatarioModel(
-        nome=destinatario_in.nome,
+        name=destinatario_in.name,
         cpf_cnpj=destinatario_in.cpf_cnpj,
-        telefone=destinatario_in.telefone,
+        phone=destinatario_in.phone,
         email=destinatario_in.email,
     )
 
@@ -51,34 +55,21 @@ async def create_destinatario(
 
 
 @router.get('/', status_code=HTTPStatus.OK, response_model=DestinatarioList)
-async def list_destinatarios(repo: DestinatarioRepo):
+async def list_destinatarios(
+    repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
+):
     destinatarios = await repo.list_destinatarios()
     return {'destinatarios': destinatarios}
 
 
 @router.get(
-    '/{destinatario_id}',
-    status_code=HTTPStatus.OK,
-    response_model=DestinatarioRead,
-)
-async def get_destinatario_by_id(destinatario_id: int, repo: DestinatarioRepo):
-    db_destinatario = await repo.get_by_id(destinatario_id)
-
-    if not db_destinatario:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='Destinatario with this ID does not exist!',
-        )
-
-    return db_destinatario
-
-
-@router.get(
-    '/search', status_code=HTTPStatus.OK, response_model=DestinatarioList
+    '/search', status_code=HTTPStatus.OK, response_model=List[DestinatarioRead]
 )
 async def search_destinatarios(
     q: str = Query(..., min_length=2, description='Termo de busca'),
     repo: DestinatarioRepository = Depends(get_destinatario_repo),
+    current_user: UserModel = Depends(get_current_user),
 ):
     """
     Busca destinatários por nome ou CPF/CNPJ para autocomplete.
@@ -93,6 +84,27 @@ async def search_destinatarios(
     return destinatarios
 
 
+@router.get(
+    '/{destinatario_id}',
+    status_code=HTTPStatus.OK,
+    response_model=DestinatarioRead,
+)
+async def get_destinatario_by_id(
+    destinatario_id: int,
+    repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
+):
+    db_destinatario = await repo.get_by_id(destinatario_id)
+
+    if not db_destinatario:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Destinatario with this ID does not exist!',
+        )
+
+    return db_destinatario
+
+
 @router.patch(
     '/{destinatario_id}',
     status_code=HTTPStatus.OK,
@@ -102,6 +114,7 @@ async def update_destinatario(
     destinatario_id: int,
     destinatario_in: DestinatarioUpdate,
     repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
 ):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
@@ -121,7 +134,9 @@ async def update_destinatario(
     response_model=DestinatarioRead,
 )
 async def deactivate_destinatario(
-    destinatario_id: int, repo: DestinatarioRepo
+    destinatario_id: int,
+    repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
 ):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
@@ -147,7 +162,11 @@ async def deactivate_destinatario(
     status_code=HTTPStatus.OK,
     response_model=DestinatarioRead,
 )
-async def activate_destinatario(destinatario_id: int, repo: DestinatarioRepo):
+async def activate_destinatario(
+    destinatario_id: int,
+    repo: DestinatarioRepo,
+    current_user: UserModel = Depends(get_current_user),
+):
     db_destinatario = await repo.get_by_id(destinatario_id)
 
     if not db_destinatario:

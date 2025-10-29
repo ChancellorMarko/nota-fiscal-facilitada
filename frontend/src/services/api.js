@@ -1,5 +1,36 @@
-// src/services/api.js
-const API_BASE_URL = 'http://localhost:8000'; // Ajuste para a URL da sua API
+const API_BASE_URL = 'http://localhost:8000';
+
+// Função para lidar com respostas da API
+const handleResponse = async (response) => {
+  const text = await response.text();
+
+  if (!text) {
+    if (response.ok) return {};
+    throw new Error('Servidor retornou resposta vazia');
+  }
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error('JSON parse error:', e);
+    throw new Error('Resposta inválida do servidor');
+  }
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Erro na requisição');
+  }
+
+  return data;
+};
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('access_token');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+};
 
 const api = {
   // Registro de usuário
@@ -193,7 +224,14 @@ const api = {
       }
 
       const data = await response.json();
-      return data;
+
+      return data.map(emitente => ({
+        nome: emitente.name,
+        cnpj: emitente.cnpj,
+        id: emitente.id,
+        phone: emitente.phone,
+        email: emitente.email
+      }));
     } catch (error) {
       console.error('Erro ao buscar emitentes:', error);
       // Retorna cache local se API falhar
@@ -222,7 +260,16 @@ const api = {
       }
 
       const data = await response.json();
-      return data;
+
+      const destinatarios = data.destinatarios || data;
+
+      return destinatarios.map(destinatario => ({
+        nome: destinatario.name,
+        cpf_cnpj: destinatario.cpf_cnpj,
+        id: destinatario.id,
+        phone: destinatario.phone,
+        email: destinatario.email
+      }));
     } catch (error) {
       console.error('Erro ao buscar destinatários:', error);
       // Retorna cache local se API falhar
@@ -239,16 +286,202 @@ const api = {
     const cacheKey = `cached_${type}`;
     const existing = JSON.parse(localStorage.getItem(cacheKey) || '[]');
 
+    const cacheData = {
+      nome: data.nome || data.name,
+      cnpj: data.cnpj,
+      cpf_cnpj: data.cpf_cnpj,
+      telefone: data.telefone || data.phone,
+      email: data.email,
+      id: data.id
+    };
+
     // Adiciona novo item se não existir
     const exists = existing.find(item =>
       type === 'emitentes'
-        ? item.cnpj === data.cnpj
-        : item.cpf_cnpj === data.cpf_cnpj
+        ? item.cnpj === cacheData.cnpj
+        : item.cpf_cnpj === cacheData.cpf_cnpj
     );
 
     if (!exists) {
-      existing.push(data);
+      existing.push(cacheData);
       localStorage.setItem(cacheKey, JSON.stringify(existing.slice(-50))); // Mantém últimos 50
+    }
+  },
+
+  // CRUD Emitentes
+  createEmitente: async (emitenteData) => {
+    try {
+      const payload = {
+        name: emitenteData.nome,
+        cnpj: emitenteData.cnpj,
+        phone: emitenteData.telefone,
+        email: emitenteData.email,
+      };
+
+      //console.log('Enviando para API:', payload); // ← DEBUG
+
+      const response = await fetch(`${API_BASE_URL}/emitentes/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Erro ao criar emitente:', error);
+      throw error;
+    }
+  },
+
+  listEmitentes: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/emitentes/`, {
+        headers: getAuthHeaders(),
+      });
+
+      const data = await handleResponse(response);
+      //console.log('Dados recebidos:', data); // DEBUG
+      return data;
+    } catch (error) {
+      console.error('Erro ao listar emitentes:', error);
+      throw error;
+    }
+  },
+
+  updateEmitente: async (id, emitenteData) => {
+    try {
+      const payload = {
+        name: emitenteData.nome,
+        cnpj: emitenteData.cnpj.replace(/\D/g, ''),
+        phone: emitenteData.telefone,
+        email: emitenteData.email,
+        active: true
+      };
+
+      //console.log('Enviando atualização:', payload); // DEBUG
+
+      const response = await fetch(`${API_BASE_URL}/emitentes/${id}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Erro ao atualizar emitente:', error);
+      throw error;
+    }
+  },
+
+  toggleEmitenteStatus: async (id, activate) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const endpoint = activate ? 'activate' : 'deactivate';
+      const response = await fetch(`${API_BASE_URL}/emitentes/${id}/${endpoint}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao alterar status');
+      return data;
+    } catch (error) {
+      console.error('Erro ao alterar status do emitente:', error);
+      throw error;
+    }
+  },
+
+  // CRUD Destinatários
+  createDestinatario: async (destinatarioData) => {
+    try {
+      const payload = {
+        name: destinatarioData.name,
+        cpf_cnpj: destinatarioData.cpf_cnpj.replace(/\D/g, ''),
+        phone: destinatarioData.phone,
+        email: destinatarioData.email,
+      };
+
+      //console.log('DEBUG - Payload final:', payload);
+
+      const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Erro ao criar destinatário:', error);
+      throw error;
+    }
+  },
+
+  listDestinatarios: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
+        headers: getAuthHeaders(),
+      });
+
+      const data = await handleResponse(response);
+      //console.log('Destinatários recebidos:', data); // DEBUG
+      return data;
+    } catch (error) {
+      console.error('Erro ao listar destinatários:', error);
+      throw error;
+    }
+  },
+
+  getDestinatarioById: async (id) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error('Destinatário não encontrado');
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao buscar destinatário:', error);
+      throw error;
+    }
+  },
+
+  updateDestinatario: async (id, destinatarioData) => {
+    try {
+      const payload = {
+        name: destinatarioData.name,
+        cpf_cnpj: destinatarioData.cpf_cnpj.replace(/\D/g, ''),
+        phone: destinatarioData.phone,
+        email: destinatarioData.email,
+      };
+
+      //  console.log('Atualizando destinatário:', payload); // DEBUG
+
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Erro ao atualizar destinatário:', error);
+      throw error;
+    }
+  },
+
+  toggleDestinatarioStatus: async (id, activate) => {
+    try {
+      const endpoint = activate ? 'activate' : 'deactivate';
+      const response = await fetch(`${API_BASE_URL}/destinatarios/${id}/${endpoint}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+      });
+
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Erro ao alterar status do destinatário:', error);
+      throw error;
     }
   },
 };

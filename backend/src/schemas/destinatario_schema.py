@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr
 
@@ -29,11 +30,11 @@ class DestinatarioCreate(DestinatarioBase):
 class DestinatarioUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
-    name: str
-    cpf_cnpj: str
-    phone: str
-    email: EmailStr
-    active: bool
+    name: Optional[str] = None
+    cpf_cnpj: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[EmailStr] = None
+    active: Optional[bool] = None
 
 
 class DestinatarioRead(BaseModel):

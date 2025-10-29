@@ -6,6 +6,9 @@ import docIcon from '../../ui/svg/document.svg';
 import serIcon from '../../ui/svg/search.svg';
 import plusIcon from '../../ui/svg/plus.svg';
 import logIcon from '../../ui/svg/sign-out.svg';
+import cardIcon from '../../ui/svg/card.svg';
+import usersIcon from '../../ui/svg/users.svg';
+
 import './navBarStyle.css';
 
 function Navbar({ activeTab }) {
@@ -26,6 +29,14 @@ function Navbar({ activeTab }) {
 
     const handleNavigateToConsult = () => {
         navigate(ROUTES.NFSE_CONSULT);
+    };
+
+    const handleNavigateToEmitentes = () => {
+        navigate(ROUTES.EMITENTES);
+    };
+
+    const handleNavigateToDestinatarios = () => {
+        navigate(ROUTES.DESTINATARIOS);
     };
 
     return (
@@ -51,6 +62,22 @@ function Navbar({ activeTab }) {
                     >
                         <img className='nav-icon' src={serIcon} alt="search" />
                         Consultar Notas
+                    </button>
+
+                    <button
+                        onClick={handleNavigateToEmitentes}
+                        className={`nav-link ${activeTab === 'emitentes' ? 'nav-link-active' : ''}`}
+                    >
+                        <img className='nav-icon' src={cardIcon} alt="search" />
+                        Emitentes
+                    </button>
+
+                    <button
+                        onClick={handleNavigateToDestinatarios}
+                        className={`nav-link ${activeTab === 'destinatarios' ? 'nav-link-active' : ''}`}
+                    >
+                        <img className='nav-icon' src={usersIcon} alt="search" />
+                        Destinatarios
                     </button>
 
                     <button

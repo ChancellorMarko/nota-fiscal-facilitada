@@ -10,7 +10,7 @@ class DestinatarioModel(AbstractBaseModel):
     __tablename__ = 'destinatarios'
 
     name: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    cnpj: Mapped[str] = mapped_column(
+    cpf_cnpj: Mapped[str] = mapped_column(
         String(20), unique=True, nullable=False, index=True
     )
     phone: Mapped[str] = mapped_column(String(20), nullable=True, index=True)
