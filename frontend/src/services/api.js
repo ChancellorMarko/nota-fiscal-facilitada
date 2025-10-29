@@ -224,7 +224,14 @@ const api = {
       }
 
       const data = await response.json();
-      return data;
+
+      return data.map(emitente => ({
+        nome: emitente.name,
+        cnpj: emitente.cnpj,
+        id: emitente.id,
+        phone: emitente.phone,
+        email: emitente.email
+      }));
     } catch (error) {
       console.error('Erro ao buscar emitentes:', error);
       // Retorna cache local se API falhar
@@ -253,7 +260,16 @@ const api = {
       }
 
       const data = await response.json();
-      return data;
+
+      const destinatarios = data.destinatarios || data;
+
+      return destinatarios.map(destinatario => ({
+        nome: destinatario.name,
+        cpf_cnpj: destinatario.cpf_cnpj,
+        id: destinatario.id,
+        phone: destinatario.phone,
+        email: destinatario.email
+      }));
     } catch (error) {
       console.error('Erro ao buscar destinatários:', error);
       // Retorna cache local se API falhar
@@ -270,15 +286,24 @@ const api = {
     const cacheKey = `cached_${type}`;
     const existing = JSON.parse(localStorage.getItem(cacheKey) || '[]');
 
+    const cacheData = {
+      nome: data.nome || data.name,
+      cnpj: data.cnpj,
+      cpf_cnpj: data.cpf_cnpj,
+      telefone: data.telefone || data.phone,
+      email: data.email,
+      id: data.id
+    };
+
     // Adiciona novo item se não existir
     const exists = existing.find(item =>
       type === 'emitentes'
-        ? item.cnpj === data.cnpj
-        : item.cpf_cnpj === data.cpf_cnpj
+        ? item.cnpj === cacheData.cnpj
+        : item.cpf_cnpj === cacheData.cpf_cnpj
     );
 
     if (!exists) {
-      existing.push(data);
+      existing.push(cacheData);
       localStorage.setItem(cacheKey, JSON.stringify(existing.slice(-50))); // Mantém últimos 50
     }
   },
@@ -376,7 +401,7 @@ const api = {
         email: destinatarioData.email,
       };
 
-      //console.log('🔍 DEBUG - Payload final:', payload);
+      //console.log('DEBUG - Payload final:', payload);
 
       const response = await fetch(`${API_BASE_URL}/destinatarios/`, {
         method: 'POST',

@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -64,6 +64,27 @@ async def list_destinatarios(
 
 
 @router.get(
+    '/search', status_code=HTTPStatus.OK, response_model=List[DestinatarioRead]
+)
+async def search_destinatarios(
+    q: str = Query(..., min_length=2, description='Termo de busca'),
+    repo: DestinatarioRepository = Depends(get_destinatario_repo),
+    current_user: UserModel = Depends(get_current_user),
+):
+    """
+    Busca destinatários por nome ou CPF/CNPJ para autocomplete.
+    Retorna no máximo 10 resultados.
+    """
+    # Remove caracteres especiais do documento para busca
+    q_clean = q.replace('.', '').replace('/', '').replace('-', '')
+
+    # Busca por nome ou documento
+    destinatarios = await repo.search(q, q_clean, limit=10)
+
+    return destinatarios
+
+
+@router.get(
     '/{destinatario_id}',
     status_code=HTTPStatus.OK,
     response_model=DestinatarioRead,
@@ -82,27 +103,6 @@ async def get_destinatario_by_id(
         )
 
     return db_destinatario
-
-
-@router.get(
-    '/search', status_code=HTTPStatus.OK, response_model=DestinatarioList
-)
-async def search_destinatarios(
-    q: str = Query(..., min_length=2, description='Termo de busca'),
-    repo: DestinatarioRepository = Depends(get_destinatario_repo),
-    current_user: UserModel = Depends(get_current_user),
-):
-    """
-    Busca destinatários por nome ou CPF/CNPJ para autocomplete.
-    Retorna no máximo 10 resultados.
-    """
-    # Remove caracteres especiais do documento para busca
-    q_clean = q.replace('.', '').replace('/', '').replace('-', '')
-
-    # Busca por nome ou documento
-    destinatarios = await repo.search(q, q_clean, limit=10)
-
-    return destinatarios
 
 
 @router.patch(
