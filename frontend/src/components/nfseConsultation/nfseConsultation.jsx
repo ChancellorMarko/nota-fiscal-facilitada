@@ -131,7 +131,7 @@ function ConsultaNotaFiscal() {
             <div className="page-header">
                 <div className="header-content">
                     <div className="header-icon">
-                        <img className='header-icon' src={serIcon} alt="search" />
+                        <img src={serIcon} alt="search" />
                     </div>
                     <div>
                         <h1 className="page-title">Consulta de Notas Fiscais</h1>
@@ -225,7 +225,9 @@ function ConsultaNotaFiscal() {
                         </div>
                     ) : filteredNotas.length === 0 ? (
                         <div className="empty-state">
-                            <img className='empty-icon' src={errIcon} alt="document" />
+                            <div className='empty-icon'>
+                                <img src={errIcon} alt="document" />
+                            </div>
                             <p>Nenhuma nota fiscal encontrada</p>
                             <span>Tente ajustar os filtros de busca</span>
                         </div>

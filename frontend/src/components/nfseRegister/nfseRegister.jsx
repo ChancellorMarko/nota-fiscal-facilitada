@@ -161,7 +161,7 @@ function CadastroNotaFiscal() {
             <div className="page-header">
                 <div className="header-content">
                     <div className="header-icon">
-                        <img className='header-icon' src={docIcon} alt="document" />
+                        <img src={docIcon} alt="document" />
                     </div>
                     <div>
                         <h1 className="page-title">Cadastro de Nota Fiscal</h1>
@@ -173,7 +173,9 @@ function CadastroNotaFiscal() {
             <div className="form-container">
                 {message.text && (
                     <div className={`alert alert-${message.type}`}>
-                        <img className='alert-icon' src={errIcon} alt="document" />
+                        <div className='alert-icon'>
+                            <img src={errIcon} alt="document" />
+                        </div>
                         <span>{message.text}</span>
                     </div>
                 )}

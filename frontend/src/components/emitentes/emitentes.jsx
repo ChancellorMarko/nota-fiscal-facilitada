@@ -167,14 +167,18 @@ function Emitentes() {
             <div className="content-container">
                 {message.text && (
                     <div className={`alert alert-${message.type}`}>
-                        <img className='alert-icon' src={errIcon} alt="error" />
+                        <div className='alert-icon'>
+                            <img src={errIcon} alt="error" />
+                        </div>
                         <span>{message.text}</span>
                     </div>
                 )}
 
                 <div className="toolbar">
                     <div className="search-box">
-                        <img className='search-icon' src={serIcon} alt="search" />
+                        <div className='search-icon'>
+                            <img src={serIcon} alt="search" />
+                        </div>
                         <input
                             type="text"
                             placeholder="Buscar por nome ou CNPJ..."
@@ -227,17 +231,17 @@ function Emitentes() {
                                             <div className="action-buttons">
                                                 <button onClick={() => openModal('view', emitente)} className="btn-icon btn-view" title="Visualizar">
                                                     <div className='option-icon'>
-                                                        <img className='option-icon' src={eyeIcon} alt="visualize" />
+                                                        <img src={eyeIcon} alt="visualize" />
                                                     </div>
                                                 </button>
                                                 <button onClick={() => openModal('edit', emitente)} className="btn-icon btn-edit" title="Editar">
                                                     <div className='option-icon'>
-                                                        <img className='option-icon' src={editIcon} alt="edit" />
+                                                        <img src={editIcon} alt="edit" />
                                                     </div>
                                                 </button>
                                                 <button onClick={() => handleToggleStatus(emitente)} className={`btn-icon ${emitente.active ? 'btn-deactivate' : 'btn-activate'}`} title={emitente.active ? 'Desativar' : 'Ativar'}>
                                                     <div className='option-icon'>
-                                                        <img className='option-icon' src={cancelIcon} alt="delete" />
+                                                        <img src={cancelIcon} alt="delete" />
                                                     </div>
                                                 </button>
                                             </div>
