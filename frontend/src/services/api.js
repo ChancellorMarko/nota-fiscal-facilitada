@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = process.env.APP_URL || 'http://localhost:8000';
 
 // Função para lidar com respostas da API
 const handleResponse = async (response) => {
@@ -35,44 +35,44 @@ const getAuthHeaders = () => {
 const api = {
   // Registro de usuário
   register: async (userData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        password: userData.password,
-      }),
-    });
-
-    const text = await response.text();
-    console.log('Response status:', response.status);
-    //console.log('Response text:', text);
-
-    let data;
     try {
-      data = text ? JSON.parse(text) : {};
-    } catch (e) {
-      console.error('JSON parse error:', e);
-      throw new Error('Resposta inválida do servidor');
-    }
+      const response = await fetch(`${API_BASE_URL}/users/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone,
+          password: userData.password,
+        }),
+      });
 
-    if (!response.ok) {
-      // Melhorar a mensagem de erro para incluir mais detalhes
-      const errorDetail = data.detail || data.message || JSON.stringify(data);
-      throw new Error(errorDetail || 'Erro ao registrar usuário');
-    }
+      const text = await response.text();
+      console.log('Response status:', response.status);
+      //console.log('Response text:', text);
 
-    return data;
-  } catch (error) {
-    console.error('Erro na requisição:', error);
-    throw error;
-  }
-},
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        console.error('JSON parse error:', e);
+        throw new Error('Resposta inválida do servidor');
+      }
+
+      if (!response.ok) {
+        // Melhorar a mensagem de erro para incluir mais detalhes
+        const errorDetail = data.detail || data.message || JSON.stringify(data);
+        throw new Error(errorDetail || 'Erro ao registrar usuário');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      throw error;
+    }
+  },
 
   // Login (gerar token)
   login: async (email, password) => {
