@@ -19,7 +19,7 @@ services:
   app:
     image: app
     build: .
-    env_file: .env
+    env_file: .env.docker
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
