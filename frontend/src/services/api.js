@@ -51,7 +51,7 @@ const api = {
 
     const text = await response.text();
     console.log('Response status:', response.status);
-    console.log('Response text:', text); // Isso mostrará os detalhes do erro
+    //console.log('Response text:', text);
 
     let data;
     try {
