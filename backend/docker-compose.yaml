@@ -19,9 +19,9 @@ services:
   app:
     image: app
     build: .
-    env_file: .env
+    env_file: .env.docker
     ports:
-      - "8000:8000"
+      - "${APP_PORT}:${APP_PORT}"
     depends_on:
       database:
         condition: service_healthy
