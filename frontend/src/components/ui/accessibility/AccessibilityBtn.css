@@ -1,0 +1,218 @@
+/* src/components/ui/accessibility/AccessibilityBtn.css - VERSÃO FINAL CORRIGIDA E LIMPA */
+
+/* --- 1. Estilos do Menu Flutuante --- */
+
+.accessibility-main-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #2563EB;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.accessibility-main-btn:hover, .accessibility-main-btn.btn-active {
+    transform: scale(1.1);
+    background-color: #1E3A8A;
+}
+
+.accessibility-menu {
+    position: fixed;
+    bottom: 80px; 
+    right: 20px;
+    /* 🎯 CORREÇÃO DESALINHAMENTO: Aumenta a largura para acomodar o texto */
+    width: 240px; 
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-item {
+    padding: 12px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #F3F4F6;
+    cursor: pointer;
+    font-size: 14px;
+    color: #374151;
+    transition: background-color 0.2s;
+}
+
+.menu-item:last-child {
+    border-bottom: none; 
+}
+
+.menu-item:hover {
+    background-color: #F3F4F6;
+}
+
+.menu-item.active {
+    background-color: #DBEAFE;
+    color: #2563EB;
+    font-weight: 600;
+}
+
+.menu-item-reset {
+    border-top: 1px solid #E5E7EB;
+    color: #DC2626;
+}
+
+/* --- 2. MODOS GLOBAIS --- */
+
+/* 2.1. DARK MODE */
+body.dark-mode {
+    background-color: #111827 !important; 
+    color: #F9FAFB !important;
+}
+
+body.dark-mode .content-container,
+body.dark-mode .page-container,
+body.dark-mode .form-card,
+body.dark-mode .table-card,
+body.dark-mode .filters-card,
+body.dark-mode .results-card,
+body.dark-mode .modal-content,
+body.dark-mode .modal-body,
+body.dark-mode .modal-footer,
+body.dark-mode .navbar,
+body.dark-mode .autocomplete-dropdown,
+body.dark-mode .data-table tbody tr {
+    background-color: #1F2937 !important; 
+    border-color: #4B5563 !important; 
+    color: #F9FAFB !important;
+}
+
+body.dark-mode .page-header {
+    background: #0A2463 !important; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode p, body.dark-mode span, body.dark-mode label, body.dark-mode th, body.dark-mode td {
+    color: #F9FAFB !important;
+}
+
+body.dark-mode .form-input, body.dark-mode .search-input {
+    background-color: #374151 !important;
+    border-color: #4B5563 !important;
+    color: #F9FAFB !important;
+}
+body.dark-mode .search-icon {
+    color: #9CA3AF !important;
+}
+
+/* 2.2. ALTO CONTRASTE */
+body.high-contrast-mode {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.high-contrast-mode .form-card,
+body.high-contrast-mode .table-card,
+body.high-contrast-mode .filters-card,
+body.high-contrast-mode .results-card,
+body.high-contrast-mode .modal-content,
+body.high-contrast-mode .modal-body,
+body.high-contrast-mode .modal-footer,
+body.high-contrast-mode .navbar,
+body.high-contrast-mode .data-table tbody tr {
+    background-color: #000000 !important; 
+    border: 1px solid #FFFF00 !important; 
+    box-shadow: none !important;
+}
+
+body.high-contrast-mode .page-header {
+    background: #000000 !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+body.high-contrast-mode h1, body.high-contrast-mode h2, body.high-contrast-mode h3, body.high-contrast-mode p, body.high-contrast-mode span, body.high-contrast-mode label, body.high-contrast-mode th, body.high-contrast-mode td {
+    color: #FFFF00 !important; 
+}
+
+body.high-contrast-mode .page-title, body.high-contrast-mode .page-subtitle {
+    color: #FFFFFF !important;
+}
+
+body.high-contrast-mode .form-input, body.high-contrast-mode .search-input {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+/* 2.3. FOCO VISUAL (REMOVIDO) */
+/* Espaço vazio, estilos de Foco Visual foram removidos. */
+
+/* 🎯 CORREÇÃO DA FONTE MAIOR */
+/* Garante que o tamanho da fonte (1em ou 1.2em) definido no body seja herdado em toda a página. */
+body.font-large-mode, 
+body.font-large-mode * {
+    font-size: inherit !important;
+}
+
+/* Garante que elementos de formulário e botões sejam corretamente ampliados. */
+body.font-large-mode input,
+body.font-large-mode button,
+body.font-large-mode textarea,
+body.font-large-mode select,
+body.font-large-mode .btn {
+    font-size: 1.2em !important;
+}
+
+/* src/components/ui/accessibility/AccessibilityBtn.css - VERSÃO FINAL COM ESCALA UNIVERSAL */
+
+/* --- (Estilos 1. e 2. mantidos: Menu, Dark Mode, Alto Contraste) --- */
+/* ... */ 
+
+/* 🎯 CORREÇÃO FINAL DA FONTE MAIOR (ESCALA UNIVERSAL) */
+/* Usa a propriedade de zoom/escala no body para garantir que TODO o layout aumente em 20%, 
+   ignorando qualquer bloqueio de font-size no CSS interno da aplicação. */
+body.font-large-mode {
+    /* 1. Anula qualquer tentativa de font-size que possa estar em conflito: */
+    font-size: 1em !important; 
+    
+    /* 2. Aplica a escala de 1.2x (120%) no conteúdo: */
+    /* Para navegadores WebKit/Chrome/Safari */
+    -webkit-transform: scale(1.2);
+    -webkit-transform-origin: 0 0;
+    
+    /* Para navegadores Firefox/outros */
+    transform: scale(1.2);
+    transform-origin: 0 0;
+    
+    /* Para navegadores IE/Edge Legacy */
+    zoom: 1.2; 
+    
+    /* Corrige o layout para que a área visível do body seja mantida */
+    width: 83.3333%; /* 100% / 1.2 = 83.3333% */
+    height: auto;
+    overflow-x: hidden; /* Remove barra de rolagem horizontal se necessário */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.accessibility-menu {
+    width: 240px; 
+    /* ... */
+}
+

@@ -289,3 +289,32 @@
         padding: 24px 20px;
     }
 }
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    opacity: 0.7;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Ajuste para o input não ficar com o texto por cima do ícone */
+.form-input {
+    padding-right: 40px !important; /* Garante espaço para o ícone */
+}
