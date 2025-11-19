@@ -10,6 +10,7 @@ const NFSEConsult = React.lazy(() => import("./components/nfseConsultation"));
 const Emitentes = React.lazy(() => import("./components/emitentes"));
 const Destinatarios = React.lazy(() => import("./components/destinatarios"));
 const NotFound = React.lazy(() => import("./components/notFound"));
+const AccessibilityBtn = React.lazy(() => import("./components/ui/accessibility/accessibilityBtn"));
 
 const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem('access_token');
@@ -24,6 +25,10 @@ const ProtectedRoute = ({ children }) => {
 function App() {
     return (
         <Router>
+            <React.Suspense fallback={<div></div>}>
+                <AccessibilityBtn />
+            </React.Suspense>
+
             <Routes>
                 {/* ROtas públicas */}
                 <Route path={ROUTES.LOGIN} element={<Login />} />
