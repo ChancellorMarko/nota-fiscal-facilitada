@@ -1,5 +1,3 @@
-// src/app.jsx (Ajustado)
-
 import React, { Children } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ROUTES from "./routes";
@@ -12,8 +10,7 @@ const NFSEConsult = React.lazy(() => import("./components/nfseConsultation"));
 const Emitentes = React.lazy(() => import("./components/emitentes"));
 const Destinatarios = React.lazy(() => import("./components/destinatarios"));
 const NotFound = React.lazy(() => import("./components/notFound"));
-
-const AccessibilityBtn = React.lazy(() => import("./components/ui/accessibility/AccessibilityBtn")); // Import OK
+const AccessibilityBtn = React.lazy(() => import("./components/ui/accessibility/accessibilityBtn"));
 
 const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem('access_token');
@@ -28,10 +25,9 @@ const ProtectedRoute = ({ children }) => {
 function App() {
     return (
         <Router>
-             {/* 🎯 CORREÇÃO: ADICIONE O BOTÃO DE ACESSIBILIDADE AQUI */}
-             <React.Suspense fallback={<div></div>}>
-                 <AccessibilityBtn /> 
-             </React.Suspense>
+            <React.Suspense fallback={<div></div>}>
+                <AccessibilityBtn />
+            </React.Suspense>
 
             <Routes>
                 {/* ROtas públicas */}

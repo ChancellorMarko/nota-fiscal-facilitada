@@ -38,7 +38,7 @@ Esta é a forma recomendada de executar o projeto, pois garante que todas as dep
 1.  **Configure as variáveis de ambiente:**
 
 O projeto utiliza variáveis de ambiente para configurações, como a string de conexão do banco de dados. Crie um arquivo `.env` e um arquivo `.env.docker` na raiz do projeto com as seguintes variáveis:
-    
+
 - .env:
     ```env
     # Token Settings
